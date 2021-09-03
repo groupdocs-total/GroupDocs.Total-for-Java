@@ -10,6 +10,7 @@ import com.groupdocs.ui.viewer.model.response.LoadDocumentEntity;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.io.InputStream;
 
 public interface ViewerService {
 
@@ -60,4 +61,12 @@ public interface ViewerService {
      * @return resource data
      */
     ResponseEntity<byte[]> getResource(String guid, String resourceName);
+
+    /**
+     * Retrieves PDF file
+     *
+     * @param loadDocumentRequest document data for loading
+     * @return PDF data
+     */
+    InputStream getPdf(LoadDocumentRequest loadDocumentRequest);
 }

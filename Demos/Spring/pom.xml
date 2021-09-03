@@ -6,7 +6,7 @@
 
     <groupId>com.groupdocs.ui</groupId>
     <artifactId>total-spring</artifactId>
-    <version>0.4.75</version>
+    <version>0.4.76</version>
     <packaging>${packaging.type}</packaging>
 
     <name>GroupDocs.Total for Java Spring Sample</name>

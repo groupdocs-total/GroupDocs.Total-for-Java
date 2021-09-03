@@ -15,6 +15,8 @@ import com.groupdocs.ui.viewer.model.response.LoadDocumentEntity;
 import com.groupdocs.ui.viewer.service.ViewerService;
 import com.groupdocs.ui.viewer.service.ViewerServiceImpl;
 import com.groupdocs.ui.viewer.views.Viewer;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -24,6 +26,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
@@ -153,7 +156,22 @@ public class ViewerResources extends Resources {
     @Path(value = "/printPdf")
     @Consumes(APPLICATION_JSON)
     public void printPdf(LoadDocumentRequest loadDocumentRequest, @Context HttpServletResponse response) {
-        downloadFile(response, loadDocumentRequest.getGuid());
+        String fileName = FilenameUtils.getName(loadDocumentRequest.getGuid());
+        String fileExtension = FilenameUtils.getExtension(fileName);
+        String pdfFileName = fileName.replace(fileExtension, "pdf");
+        InputStream inputStream = viewerService.getPdf(loadDocumentRequest);
+
+        try (OutputStream outputStream = response.getOutputStream()) {
+            int size = inputStream.available();
+            
+            response.setHeader("Content-disposition", "attachment; filename=" + fileName);
+            response.setHeader("Content-Type", "application/pdf");
+            response.setHeader("Content-Length", String.valueOf(size));
+    
+            IOUtils.copyLarge(inputStream, outputStream);
+        } catch (Exception ex) {
+            throw new TotalGroupDocsException(ex.getMessage(), ex);
+        }
     }
 
     /**

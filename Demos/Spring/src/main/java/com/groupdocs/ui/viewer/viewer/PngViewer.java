@@ -2,12 +2,15 @@ package com.groupdocs.ui.viewer.viewer;
 
 import com.groupdocs.ui.viewer.config.ViewerConfiguration;
 import com.groupdocs.ui.viewer.util.ViewerUtils;
+import com.groupdocs.viewer.options.ViewOptions;
 import com.groupdocs.viewer.options.PngViewOptions;
+import com.groupdocs.viewer.options.PdfViewOptions;
 import com.groupdocs.viewer.options.Rotation;
 import com.groupdocs.viewer.options.ViewInfoOptions;
 
+import org.apache.commons.io.FileUtils;
 import java.io.IOException;
-import java.net.URI;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;

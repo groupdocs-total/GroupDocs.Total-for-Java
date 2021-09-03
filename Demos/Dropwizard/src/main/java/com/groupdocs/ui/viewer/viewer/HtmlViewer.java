@@ -16,6 +16,7 @@ public class HtmlViewer extends CustomViewer<HtmlViewOptions> {
     public HtmlViewer(String filePath, ViewerCache cache, LoadOptions loadOptions, int pageNumber/* = -1*/, int newAngle/* = 0*/) {
         super(filePath, cache, loadOptions);
         this.viewOptions = this.createHtmlViewOptions(pageNumber, newAngle);
+        this.pdfViewOptions = this.createPdfViewOptions();
         this.viewInfoOptions = ViewInfoOptions.fromHtmlViewOptions(this.viewOptions);
     }
 
@@ -51,10 +52,7 @@ public class HtmlViewer extends CustomViewer<HtmlViewOptions> {
             }
         });
 
-        htmlViewOptions.getSpreadsheetOptions().setTextOverflowMode(TextOverflowMode.HIDE_TEXT);
-        htmlViewOptions.getSpreadsheetOptions().setSkipEmptyColumns(true);
-        htmlViewOptions.getSpreadsheetOptions().setSkipEmptyRows(true);
-        setWatermarkOptions(htmlViewOptions);
+        setCommonViewOptions(htmlViewOptions);
 
         if (passedPageNumber >= 0 && newAngle != 0) {
             Rotation rotationAngle = getRotationByAngle(newAngle);
@@ -62,6 +60,19 @@ public class HtmlViewer extends CustomViewer<HtmlViewOptions> {
         }
 
         return htmlViewOptions;
+    }
+
+    private com.groupdocs.viewer.options.PdfViewOptions createPdfViewOptions() {
+        PdfViewOptions pdfViewOptions = new PdfViewOptions(new CustomFileStreamFactory(".pdf"));
+        setCommonViewOptions(pdfViewOptions);
+        return pdfViewOptions;
+    }
+
+    private void setCommonViewOptions(com.groupdocs.viewer.options.ViewOptions viewOptions){
+        viewOptions.getSpreadsheetOptions().setTextOverflowMode(TextOverflowMode.HIDE_TEXT);
+        viewOptions.getSpreadsheetOptions().setSkipEmptyColumns(true);
+        viewOptions.getSpreadsheetOptions().setSkipEmptyRows(true);
+        setWatermarkOptions(viewOptions);
     }
 
     @Override

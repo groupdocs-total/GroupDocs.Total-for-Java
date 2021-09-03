@@ -37,8 +37,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -238,6 +240,20 @@ public class ViewerServiceImpl implements ViewerService {
         return viewerConfiguration;
     }
 
+    @Override
+    public InputStream getPdf(LoadDocumentRequest loadDocumentRequest) {
+        String documentGuid = loadDocumentRequest.getGuid();
+        String password = loadDocumentRequest.getPassword();
+        password = org.apache.commons.lang3.StringUtils.isEmpty(password) ? null : password;
+
+        try (CustomViewer<?> customViewer = createCustomViewer(documentGuid, password)) {
+            return customViewer.getPdf();
+        } catch (Exception ex) {
+            logger.error("Exception in loading pdf file", ex);
+            throw new TotalGroupDocsException(ex.getMessage(), ex);
+        }
+    }
+    
     private PageDescriptionEntity getPageDescriptionEntity(CustomViewer<?> customViewer, String documentGuid, int pageNumber) {
         ViewInfo viewInfo = customViewer.getViewInfo();
         final Path resourcesDir = ViewerUtils.makeResourcesDir(viewerConfiguration);

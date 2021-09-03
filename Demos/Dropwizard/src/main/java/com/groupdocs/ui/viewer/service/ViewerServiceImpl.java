@@ -37,8 +37,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.InputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -271,6 +273,48 @@ public class ViewerServiceImpl implements ViewerService {
         return viewerConfiguration;
     }
 
+    @Override
+    public InputStream getPdf(LoadDocumentRequest loadDocumentRequest) {
+        String documentGuid = loadDocumentRequest.getGuid();
+        String password = loadDocumentRequest.getPassword();
+        password = org.apache.commons.lang3.StringUtils.isEmpty(password) ? null : password;
+        CustomViewer<?> customViewer = null;
+        try {
+            String fileCacheSubFolder = createFileCacheSubFolderPath(documentGuid);
+            ViewerCache cache = new FileViewerCache(mCachePath, fileCacheSubFolder);
+
+            if (viewerConfiguration.isHtmlMode()) {
+                customViewer = new HtmlViewer(documentGuid, cache, createLoadOptions(password));
+            } else {
+                customViewer = new PngViewer(documentGuid, cache, createLoadOptions(password));
+            }
+            return getPdfFile(customViewer, documentGuid, fileCacheSubFolder);
+        } catch (Exception ex) {
+            logger.error("Exception in loading document page", ex);
+            throw new TotalGroupDocsException(ex.getMessage(), ex);
+        } finally {
+            if (customViewer != null) {
+                customViewer.close();
+            }
+        }
+    }
+
+    private InputStream getPdfFile(CustomViewer<?> customViewer, String documentGuid, String fileCacheSubFolder) throws IOException {
+        customViewer.createPdf();
+
+        InputStream pdfStream = getPdfFile(documentGuid, mCachePath);
+
+        return pdfStream;
+    }
+
+    private InputStream getPdfFile(String documentGuid, String cachePath) throws IOException {
+        String fileFolderName = new File(documentGuid).getName().replace(".", "_");
+        String pngFilePath = cachePath + "/" + fileFolderName + "/f.pdf";
+
+        byte[] fileBytes = FileUtils.readFileToByteArray(new File(pngFilePath));
+
+        return new ByteArrayInputStream(fileBytes);
+    }
 
     private String createFileCacheSubFolderPath(String documentGuid) {
         String fileFolderName = new File(documentGuid).getName().replace(".", "_");

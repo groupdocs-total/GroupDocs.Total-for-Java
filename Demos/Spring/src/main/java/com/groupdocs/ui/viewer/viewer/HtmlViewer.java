@@ -3,11 +3,15 @@ package com.groupdocs.ui.viewer.viewer;
 import com.groupdocs.ui.viewer.config.ViewerConfiguration;
 import com.groupdocs.ui.viewer.util.ViewerUtils;
 import com.groupdocs.viewer.options.HtmlViewOptions;
+import com.groupdocs.viewer.options.PdfViewOptions;
 import com.groupdocs.viewer.options.Rotation;
 import com.groupdocs.viewer.options.TextOverflowMode;
 import com.groupdocs.viewer.options.ViewInfoOptions;
 
+import org.apache.commons.io.FileUtils;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;

@@ -1,11 +1,11 @@
 package com.groupdocs.ui.conversion;
 
 import com.google.common.collect.Ordering;
-import com.groupdocs.conversion.License;
-import com.groupdocs.conversion.config.ConversionConfig;
-import com.groupdocs.conversion.handler.ConversionHandler;
-import com.groupdocs.conversion.handler.ConvertedDocument;
-import com.groupdocs.conversion.options.save.*;
+import com.groupdocs.conversion.Converter;
+import com.groupdocs.conversion.contracts.documentinfo.IDocumentInfo;
+import com.groupdocs.conversion.licensing.License;
+import com.groupdocs.conversion.options.convert.ConvertOptions;
+import com.groupdocs.conversion.options.convert.ImageConvertOptions;
 import com.groupdocs.ui.config.DefaultDirectories;
 import com.groupdocs.ui.config.GlobalConfiguration;
 import com.groupdocs.ui.conversion.model.request.ConversionPostedData;
@@ -23,18 +23,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static com.groupdocs.ui.util.Utils.FILE_NAME_COMPARATOR;
-import static com.groupdocs.ui.util.Utils.FILE_TYPE_COMPARATOR;
-import static com.groupdocs.ui.util.Utils.parseFileExtension;
+import static com.groupdocs.ui.util.Utils.*;
 
 @Service
 public class ConversionServiceImpl implements ConversionService {
@@ -44,9 +44,7 @@ public class ConversionServiceImpl implements ConversionService {
     @Autowired
     private GlobalConfiguration globalConfiguration;
 
-    private ConversionHandler handler;
-
-    private List<String> supportedImageFormats =  Arrays.asList( "jp2", "ico", "psd", "svg", "bmp", "jpeg", "jpg", "tiff", "tif", "png", "gif", "emf", "wmf", "dwg", "dicom", "dxf", "jpe", "jfif" );
+    private final List<String> supportedImageFormats = Arrays.asList("jp2", "ico", "psd", "svg", "bmp", "jpeg", "jpg", "tiff", "tif", "png", "gif", "emf", "wmf", "dwg", "dicom", "dxf", "jpe", "jfif");
 
     /**
      * Initializing fields after creating configuration objects
@@ -54,12 +52,8 @@ public class ConversionServiceImpl implements ConversionService {
     @PostConstruct
     public void init() {
         // check files directories
-        String filesDirectory = conversionConfiguration.getFilesDirectory();
         String resultDirectory = conversionConfiguration.getResultDirectory();
-        DefaultDirectories.makeDirs(Paths.get(resultDirectory));
-        ConversionConfig conversionConfig = new ConversionConfig();
-        conversionConfig.setStoragePath(filesDirectory);
-        conversionConfig.setOutputPath(resultDirectory);
+        DefaultDirectories.makeDirs(new File(resultDirectory).toPath());
         // set GroupDocs license
         try {
             License license = new License();
@@ -67,8 +61,6 @@ public class ConversionServiceImpl implements ConversionService {
         } catch (Throwable exc) {
             logger.error("Can not verify Conversion license!");
         }
-        handler = new ConversionHandler(conversionConfig);
-        handler.getPossibleConversions("pdf");
     }
 
     /**
@@ -155,23 +147,26 @@ public class ConversionServiceImpl implements ConversionService {
      */
     @Override
     public void convert(ConversionPostedData postedData) {
-        String sourceType = parseFileExtension(postedData.getGuid());
         String destinationType = postedData.getDestinationType();
         String destinationFile = FilenameUtils.removeExtension(FilenameUtils.getName(postedData.getGuid())) + "." + destinationType;
-        String resultFileName = FilenameUtils.concat(conversionConfiguration.getResultDirectory(),destinationFile);
+        String resultFileName = FilenameUtils.concat(conversionConfiguration.getResultDirectory(), destinationFile);
 
-        Dictionary<String, SaveOptions> availableSaveOptions = handler.getSaveOptions(sourceType);
-        SaveOptions saveOptions = availableSaveOptions.get(destinationType);
-        ConvertedDocument convertedDocument = handler.convert(postedData.getGuid(), saveOptions);
-
-        if(convertedDocument.getPageCount() > 1 && saveOptions instanceof ImageSaveOptions){
-            for(int i = 1; i <= convertedDocument.getPageCount(); i++){
-                String fileName = FilenameUtils.removeExtension(resultFileName) + "-page" + i + "." + destinationType;
-                convertedDocument.save(fileName,i);
+        Converter converter = new Converter(postedData.getGuid());
+        ConvertOptions<?> convertOptions = converter.getPossibleConversions().getTargetConversion(destinationType).getConvertOptions();
+        IDocumentInfo documentInfo = converter.getDocumentInfo();
+        if (convertOptions instanceof ImageConvertOptions) {
+            ImageConvertOptions imageConvertOptions = (ImageConvertOptions) convertOptions;
+            for (int i = 0; i < documentInfo.getPagesCount(); i++) {
+                String fileName = FilenameUtils.removeExtension(FilenameUtils.getName(postedData.getGuid())) + "-" + i + "." + destinationType;
+                fileName = FilenameUtils.concat(conversionConfiguration.getResultDirectory(), fileName);
+                imageConvertOptions.setPageNumber(i + 1);
+                imageConvertOptions.setPagesCount(1);
+                converter.convert(fileName, convertOptions);
             }
-        }else{
-            convertedDocument.save(resultFileName);
+        } else {
+            converter.convert(resultFileName, convertOptions);
         }
+        converter.dispose();
     }
 
 

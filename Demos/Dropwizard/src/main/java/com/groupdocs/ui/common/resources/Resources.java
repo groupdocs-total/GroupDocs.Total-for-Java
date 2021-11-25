@@ -37,119 +37,23 @@ import static com.groupdocs.ui.common.util.Utils.getFreeFileName;
  * @author Aspose Pty Ltd
  */
 public abstract class Resources {
+    private static final ZoneId GMT = ZoneId.of("GMT");
+    /**
+     * Date formats with time zone as specified in the HTTP RFC.
+     *
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-7.1.1.1">Section 7.1.1.1 of RFC 7231</a>
+     */
+    private static final DateTimeFormatter[] DATE_FORMATTERS = new DateTimeFormatter[]{
+            DateTimeFormatter.RFC_1123_DATE_TIME,
+            DateTimeFormatter.ofPattern("EEEE, dd-MMM-yy HH:mm:ss zz", Locale.US),
+            DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy", Locale.US).withZone(GMT)
+    };
     protected final String DEFAULT_CHARSET = "UTF-8";
     protected final GlobalConfiguration globalConfiguration;
 
-    private static final ZoneId GMT = ZoneId.of("GMT");
-
-    /**
-     * Get path to storage. Different for different products
-     *
-     * @param params parameters for calculating the path
-     * @return path to files storage
-     */
-    protected abstract String getStoragePath(Map<String, Object> params);
-
-    /**
-     * Internal upload file into server
-     *
-     * @param documentUrl url for document
-     * @param inputStream file stream
-     * @param fileDetail file description
-     * @param rewrite flag for rewriting file
-     * @param params parameters for creating path to files storage
-     * @return path to file in storage
-     */
-    protected String uploadFile(String documentUrl, InputStream inputStream, FormDataContentDisposition fileDetail, boolean rewrite, Map<String, Object> params) {
-        InputStream uploadedInputStream = null;
-        String pathname;
-        try {
-            String fileName;
-            if (StringUtils.isEmpty(documentUrl)) {
-                // get the InputStream to store the file
-                uploadedInputStream = inputStream;
-                fileName = fileDetail.getFileName();
-            } else {
-                // get the InputStream from the URL
-                URL url =  new URL(documentUrl);
-                uploadedInputStream = url.openStream();
-                fileName = FilenameUtils.getName(url.getPath());
-            }
-            // get documents storage path
-            String documentStoragePath = getStoragePath(params);
-            // save the file
-            pathname = String.format("%s%s%s", documentStoragePath, File.separator, fileName);
-            File file = new File(pathname);
-            // check rewrite mode
-            if (rewrite) {
-                // save file with rewrite if exists
-                Files.copy(uploadedInputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            } else {
-                if (file.exists()){
-                    // get file with new name
-                    file = getFreeFileName(documentStoragePath, fileName);
-                }
-                // save file with out rewriting
-                Path path = file.toPath();
-                Files.copy(uploadedInputStream, path);
-                pathname = path.toString();
-            }
-        } catch(Exception ex) {
-            throw new TotalGroupDocsException(ex.getMessage(), ex);
-        } finally {
-            try {
-                uploadedInputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return pathname;
-    }
-
-    /**
-     * Date formats with time zone as specified in the HTTP RFC.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-7.1.1.1">Section 7.1.1.1 of RFC 7231</a>
-     */
-    private static final DateTimeFormatter[] DATE_FORMATTERS = new DateTimeFormatter[] {
-            DateTimeFormatter.RFC_1123_DATE_TIME,
-            DateTimeFormatter.ofPattern("EEEE, dd-MMM-yy HH:mm:ss zz", Locale.US),
-            DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy",Locale.US).withZone(GMT)
-    };
-
-    /**
-     * Fill Header Content-disposition parameter for download file
-     *
-     * @param response http response to fill header
-     * @param fileName name of file
-     */
-    protected void fillResponseHeaderDisposition(HttpServletResponse response, String fileName) {
-        response.setHeader("Content-disposition", "attachment; filename=" + fileName);
-    }
-
-    /**
-     * Download file
-     *
-     * @param response http response
-     * @param pathToFile path to file
-     */
-    protected void downloadFile(HttpServletResponse response, String pathToFile) {
-        String fileName = FilenameUtils.getName(pathToFile);
-        // don't delete, should be before writing
-        fillResponseHeaderDisposition(response, fileName);
-        long length;
-        try (InputStream inputStream = new FileInputStream(pathToFile);
-             OutputStream outputStream = response.getOutputStream()){
-            // download the document
-            length = IOUtils.copyLarge(inputStream, outputStream);
-        } catch (Exception ex){
-            throw new TotalGroupDocsException(ex.getMessage(), ex);
-        }
-        // set response content disposition
-        addFileDownloadHeaders(response, fileName, length);
-    }
-
     /**
      * Constructor
+     *
      * @param globalConfiguration global application configuration
      * @throws UnknownHostException
      */
@@ -165,18 +69,6 @@ public abstract class Resources {
         String hostAddress = globalConfiguration.getApplication().getHostAddress();
         if (StringUtils.isEmpty(hostAddress) || hostAddress.startsWith("${")) {
             globalConfiguration.getApplication().setHostAddress(InetAddress.getLocalHost().getHostAddress());
-        }
-    }
-
-    /**
-     * Fill header HTTP response with file data
-     */
-    public void addFileDownloadHeaders(HttpServletResponse response, String fileName, Long fileLength) {
-        Map<String, List<String>> fileDownloadHeaders = createFileDownloadHeaders(fileName, fileLength, MediaType.APPLICATION_OCTET_STREAM);
-        for (Map.Entry<String, List<String>> entry : fileDownloadHeaders.entrySet()) {
-            for (String value : entry.getValue()) {
-                response.addHeader(entry.getKey(), value);
-            }
         }
     }
 
@@ -202,6 +94,114 @@ public abstract class Resources {
         Instant instant = Instant.ofEpochMilli(date);
         ZonedDateTime time = ZonedDateTime.ofInstant(instant, GMT);
         return DATE_FORMATTERS[0].format(time);
+    }
+
+    /**
+     * Get path to storage. Different for different products
+     *
+     * @param params parameters for calculating the path
+     * @return path to files storage
+     */
+    protected abstract String getStoragePath(Map<String, Object> params);
+
+    /**
+     * Internal upload file into server
+     *
+     * @param documentUrl url for document
+     * @param inputStream file stream
+     * @param fileDetail  file description
+     * @param rewrite     flag for rewriting file
+     * @param params      parameters for creating path to files storage
+     * @return path to file in storage
+     */
+    protected String uploadFile(String documentUrl, InputStream inputStream, FormDataContentDisposition fileDetail, boolean rewrite, Map<String, Object> params) {
+        InputStream uploadedInputStream = null;
+        String pathname;
+        try {
+            String fileName;
+            if (StringUtils.isEmpty(documentUrl)) {
+                // get the InputStream to store the file
+                uploadedInputStream = inputStream;
+                fileName = fileDetail.getFileName();
+            } else {
+                // get the InputStream from the URL
+                URL url = new URL(documentUrl);
+                uploadedInputStream = url.openStream();
+                fileName = FilenameUtils.getName(url.getPath());
+            }
+            // get documents storage path
+            String documentStoragePath = getStoragePath(params);
+            // save the file
+            pathname = String.format("%s%s%s", documentStoragePath, File.separator, fileName);
+            File file = new File(pathname);
+            // check rewrite mode
+            if (rewrite) {
+                // save file with rewrite if exists
+                Files.copy(uploadedInputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                if (file.exists()) {
+                    // get file with new name
+                    file = getFreeFileName(documentStoragePath, fileName);
+                }
+                // save file with out rewriting
+                Path path = file.toPath();
+                Files.copy(uploadedInputStream, path);
+                pathname = path.toString();
+            }
+        } catch (Exception ex) {
+            throw new TotalGroupDocsException(ex.getMessage(), ex);
+        } finally {
+            try {
+                uploadedInputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return pathname;
+    }
+
+    /**
+     * Fill Header Content-disposition parameter for download file
+     *
+     * @param response http response to fill header
+     * @param fileName name of file
+     */
+    protected void fillResponseHeaderDisposition(HttpServletResponse response, String fileName) {
+        response.setHeader("Content-disposition", "attachment; filename=" + fileName);
+    }
+
+    /**
+     * Download file
+     *
+     * @param response   http response
+     * @param pathToFile path to file
+     */
+    protected void downloadFile(HttpServletResponse response, String pathToFile) {
+        String fileName = FilenameUtils.getName(pathToFile);
+        // don't delete, should be before writing
+        fillResponseHeaderDisposition(response, fileName);
+        long length;
+        try (InputStream inputStream = new FileInputStream(pathToFile);
+             OutputStream outputStream = response.getOutputStream()) {
+            // download the document
+            length = IOUtils.copyLarge(inputStream, outputStream);
+        } catch (Exception ex) {
+            throw new TotalGroupDocsException(ex.getMessage(), ex);
+        }
+        // set response content disposition
+        addFileDownloadHeaders(response, fileName, length);
+    }
+
+    /**
+     * Fill header HTTP response with file data
+     */
+    public void addFileDownloadHeaders(HttpServletResponse response, String fileName, Long fileLength) {
+        Map<String, List<String>> fileDownloadHeaders = createFileDownloadHeaders(fileName, fileLength, MediaType.APPLICATION_OCTET_STREAM);
+        for (Map.Entry<String, List<String>> entry : fileDownloadHeaders.entrySet()) {
+            for (String value : entry.getValue()) {
+                response.addHeader(entry.getKey(), value);
+            }
+        }
     }
 
 }

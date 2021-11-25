@@ -4,9 +4,9 @@ import com.groupdocs.signature.options.SignOptions;
 import com.groupdocs.signature.options.digitalsignature.CellsSignDigitalOptions;
 import com.groupdocs.signature.options.digitalsignature.PdfSignDigitalOptions;
 import com.groupdocs.signature.options.digitalsignature.WordsSignDigitalOptions;
+import com.groupdocs.ui.common.exception.NotSupportedException;
 import com.groupdocs.ui.signature.entity.web.SignatureDataEntity;
 
-import javax.ws.rs.NotSupportedException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -101,11 +101,9 @@ public class DigitalSigner extends Signer {
 
     /**
      * Sign slides with digital signature currently not supported
-     *
-     * @throws NotSupportedException
      */
     @Override
-    public SignOptions signSlides() throws NotSupportedException, ParseException {
+    public SignOptions signSlides() throws NotSupportedException {
         throw new NotSupportedException("This file type is not supported");
     }
 }

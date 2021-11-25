@@ -102,7 +102,7 @@ public class ViewerResources extends Resources {
         if (StringUtils.isEmpty(loadDocumentRequest.getGuid())) {
             throw new TotalGroupDocsException("Document guid is empty!");
         }
-        return viewerService.loadDocument(loadDocumentRequest, globalConfiguration.getViewer().getPreloadPageCount() == 0);
+        return viewerService.loadDocument(loadDocumentRequest, globalConfiguration.getViewer().getPreloadPageCount() == 0, false);
     }
 
     /**
@@ -116,7 +116,7 @@ public class ViewerResources extends Resources {
     @Produces(APPLICATION_JSON)
     @Consumes(APPLICATION_JSON)
     public LoadDocumentEntity loadThumbnails(LoadDocumentRequest loadDocumentRequest) {
-        return viewerService.loadDocument(loadDocumentRequest, true);
+        return viewerService.loadDocument(loadDocumentRequest, true, false);
     }
 
     /**
@@ -144,7 +144,7 @@ public class ViewerResources extends Resources {
     @Produces(APPLICATION_JSON)
     @Consumes(APPLICATION_JSON)
     public LoadDocumentEntity loadPrint(LoadDocumentRequest loadDocumentRequest) {
-        return viewerService.loadDocument(loadDocumentRequest, true);
+        return viewerService.loadDocument(loadDocumentRequest, true, true);
     }
 
     /**
@@ -163,11 +163,11 @@ public class ViewerResources extends Resources {
 
         try (OutputStream outputStream = response.getOutputStream()) {
             int size = inputStream.available();
-            
+
             response.setHeader("Content-disposition", "attachment; filename=" + fileName);
             response.setHeader("Content-Type", "application/pdf");
             response.setHeader("Content-Length", String.valueOf(size));
-    
+
             IOUtils.copyLarge(inputStream, outputStream);
         } catch (Exception ex) {
             throw new TotalGroupDocsException(ex.getMessage(), ex);

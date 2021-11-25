@@ -3,8 +3,7 @@ package com.groupdocs.ui.signature.signer;
 import com.groupdocs.signature.options.SignOptions;
 import com.groupdocs.ui.signature.entity.web.SignatureDataEntity;
 
-import javax.ws.rs.NotSupportedException;
-import java.awt.Color;
+import java.awt.*;
 import java.text.ParseException;
 
 /**
@@ -18,8 +17,6 @@ public abstract class Signer {
 
     /**
      * Constructor
-     *
-     * @param signatureData
      */
     public Signer(SignatureDataEntity signatureData) {
         this.signatureData = signatureData;
@@ -27,9 +24,6 @@ public abstract class Signer {
 
     /**
      * Converts RGB color to java.awt.Color
-     *
-     * @param rgbColor
-     * @return Color
      */
     protected Color getColor(String rgbColor) {
         String[] colors = rgbColor.split(",");
@@ -39,40 +33,15 @@ public abstract class Signer {
         return new Color(redColor, greenColor, blueColor);
     }
 
-    /**
-     * @return
-     * @throws NotSupportedException
-     * @throws ParseException
-     */
-    public abstract SignOptions signPdf() throws NotSupportedException, ParseException;
+    public abstract SignOptions signPdf() throws ParseException;
 
-    /**
-     * @return
-     * @throws NotSupportedException
-     * @throws ParseException
-     */
-    public abstract SignOptions signImage() throws NotSupportedException;
+    public abstract SignOptions signImage();
 
-    /**
-     * @return
-     * @throws NotSupportedException
-     * @throws ParseException
-     */
-    public abstract SignOptions signWord() throws NotSupportedException, ParseException;
+    public abstract SignOptions signWord() throws ParseException;
 
-    /**
-     * @return
-     * @throws NotSupportedException
-     * @throws ParseException
-     */
-    public abstract SignOptions signCells() throws NotSupportedException, ParseException;
+    public abstract SignOptions signCells() throws ParseException;
 
-    /**
-     * @return
-     * @throws NotSupportedException
-     * @throws ParseException
-     */
-    public abstract SignOptions signSlides() throws NotSupportedException, ParseException;
+    public abstract SignOptions signSlides();
 
 
 }

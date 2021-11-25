@@ -37,13 +37,9 @@ public class EditorResources extends Resources {
 
     private EditorService editorService;
 
-    @Override
-    protected String getStoragePath(Map<String, Object> params) {
-        return globalConfiguration.getEditor().getFilesDirectory();
-    }
-
     /**
      * Constructor
+     *
      * @param globalConfiguration global configuration object
      * @throws UnknownHostException
      */
@@ -52,6 +48,11 @@ public class EditorResources extends Resources {
 
         this.globalConfiguration = globalConfiguration;
         this.editorService = new EditorServiceImpl(globalConfiguration);
+    }
+
+    @Override
+    protected String getStoragePath(Map<String, Object> params) {
+        return globalConfiguration.getEditor().getFilesDirectory();
     }
 
     /**

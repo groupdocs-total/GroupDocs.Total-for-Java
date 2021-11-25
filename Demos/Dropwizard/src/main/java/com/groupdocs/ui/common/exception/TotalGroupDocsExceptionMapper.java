@@ -17,6 +17,7 @@ import static com.groupdocs.ui.common.exception.PasswordExceptions.*;
 @Provider
 public class TotalGroupDocsExceptionMapper implements ExceptionMapper<TotalGroupDocsException> {
     private static final Logger logger = LoggerFactory.getLogger(TotalGroupDocsExceptionMapper.class);
+
     @Override
     public Response toResponse(TotalGroupDocsException exception) {
         ExceptionEntity exceptionEntity = new ExceptionEntity();
@@ -29,7 +30,7 @@ public class TotalGroupDocsExceptionMapper implements ExceptionMapper<TotalGroup
             exception.printStackTrace();
             exceptionEntity.setException(exception);
         }
-        logger.error(exception.getCause() != null? exception.getCause().getLocalizedMessage() : message);
+        logger.error(exception.getCause() != null ? exception.getCause().getLocalizedMessage() : message);
         return Response
                 .serverError()
                 .type(MediaType.APPLICATION_JSON_TYPE)

@@ -18,26 +18,27 @@ import java.util.Map;
 @Path(value = "/")
 public class TotalResources extends Resources {
 
+    /**
+     * Constructor
+     *
+     * @param globalConfiguration global configuration object
+     */
+    public TotalResources(GlobalConfiguration globalConfiguration) throws UnknownHostException {
+        super(globalConfiguration);
+    }
+
     @Override
     protected String getStoragePath(Map<String, Object> params) {
         return "";
     }
 
     /**
-     * Constructor
-     * @param globalConfiguration global configuration object
-     * @throws UnknownHostException
-     */
-    public TotalResources(GlobalConfiguration globalConfiguration) throws UnknownHostException {
-        super(globalConfiguration);
-    }
-
-    /**
      * Get and set total page
+     *
      * @return html view
      */
     @GET
-    public Total getView(){
+    public Total getView() {
         return new Total(DEFAULT_CHARSET);
     }
 }

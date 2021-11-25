@@ -119,7 +119,7 @@ public class AnnotationResources extends Resources {
     @Path(value = "/downloadDocument")
     @Produces(APPLICATION_OCTET_STREAM)
     public void downloadDocument(@QueryParam("path") String documentGuid,
-                                 @Context HttpServletResponse response) {     
+                                 @Context HttpServletResponse response) {
         // download the file
         downloadFile(response, documentGuid);
     }

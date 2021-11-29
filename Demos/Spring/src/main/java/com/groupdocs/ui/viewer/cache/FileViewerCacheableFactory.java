@@ -1,6 +1,6 @@
-package com.groupdocs.ui.viewer.cache.jackson;
+package com.groupdocs.ui.viewer.cache;
 
-import com.groupdocs.ui.viewer.cache.jackson.model.*;
+import com.groupdocs.ui.viewer.cache.model.*;
 import com.groupdocs.viewer.FileType;
 import com.groupdocs.viewer.caching.extra.CacheableFactory;
 import com.groupdocs.viewer.results.Character;
@@ -9,7 +9,7 @@ import com.groupdocs.viewer.results.*;
 import java.util.Date;
 import java.util.List;
 
-public class JacksonCacheableFactory extends CacheableFactory {
+public class FileViewerCacheableFactory extends CacheableFactory {
     @Override
     public ViewInfo newViewInfo(FileType fileType, List<Page> pages) {
         return new ViewInfoModel(fileType.name(), pages);
@@ -56,13 +56,13 @@ public class JacksonCacheableFactory extends CacheableFactory {
     }
 
     @Override
-    public Attachment newAttachment(String id, String fileName, long size) {
-        return new AttachmentModel(id, fileName, size);
+    public Attachment newAttachment(String id, String fileName, String filePath, long size) {
+        return new AttachmentModel(id, fileName, filePath, size);
     }
 
     @Override
-    public Attachment newAttachment(String id, String fileName, FileType fileType, long size) {
-        return new AttachmentModel(id, fileName, fileType, size);
+    public Attachment newAttachment(String id, String fileName, String filePath, FileType fileType, long size) {
+        return new AttachmentModel(id, fileName, filePath, fileType, size);
     }
 
     @Override
@@ -113,20 +113,5 @@ public class JacksonCacheableFactory extends CacheableFactory {
     @Override
     public Word newWord(String word, double x, double y, double width, double height, List<Character> characters) {
         return new WordModel(word, x, y, width, height, characters);
-    }
-
-    @Override
-    public Attachment newAttachment(String fileName) {
-        return new AttachmentModel(fileName);
-    }
-
-    @Override
-    public Page newPage(int number, boolean visible) {
-        return new PageModel(number, visible);
-    }
-
-    @Override
-    public <T> TextElement<T> newTextElement(T value, double x, double y, double width, double height) {
-        return new TextElementModel<T>(value, x, y, width, height);
     }
 }

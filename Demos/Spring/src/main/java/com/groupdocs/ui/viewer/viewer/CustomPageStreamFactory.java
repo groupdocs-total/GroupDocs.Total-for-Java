@@ -1,5 +1,6 @@
 package com.groupdocs.ui.viewer.viewer;
 
+import com.groupdocs.ui.viewer.cache.ViewerCache;
 import com.groupdocs.viewer.interfaces.PageStreamFactory;
 import org.apache.commons.io.FileUtils;
 
@@ -13,9 +14,11 @@ import java.nio.file.Path;
 class CustomPageStreamFactory implements PageStreamFactory {
     private final String mExtension;
     private final Path mDocumentResourcesDir;
+    private final ViewerCache mCache;
 
-    public CustomPageStreamFactory(Path documentResourcesDir, String extension) {
+    public CustomPageStreamFactory(Path documentResourcesDir, String extension, ViewerCache viewerCache) {
         this.mExtension = extension;
+        this.mCache = viewerCache;
         this.mDocumentResourcesDir = documentResourcesDir;
         if (Files.notExists(this.mDocumentResourcesDir)) {
             try {
@@ -29,7 +32,12 @@ class CustomPageStreamFactory implements PageStreamFactory {
     @Override
     public OutputStream createPageStream(int pageNumber) {
         String fileName = "p" + pageNumber + mExtension;
-        Path resourceFilePath = mDocumentResourcesDir.resolve(fileName);
+        Path resourceFilePath;
+        if (mCache == null) {
+            resourceFilePath = mDocumentResourcesDir.resolve(fileName);
+        } else {
+            resourceFilePath = mCache.getCacheFilePath(fileName);
+        }
 
         try {
             return new FileOutputStream(resourceFilePath.toFile());
@@ -51,7 +59,13 @@ class CustomPageStreamFactory implements PageStreamFactory {
 
     public byte[] getPageContent(int pageNumber) throws IOException {
         String fileName = "p" + pageNumber + mExtension;
-        Path cacheFilePath = mDocumentResourcesDir.resolve(fileName);
+
+        Path cacheFilePath;
+        if (mCache == null) {
+            cacheFilePath = mDocumentResourcesDir.resolve(fileName);
+        } else {
+            cacheFilePath = mCache.getCacheFilePath(fileName);
+        }
         return FileUtils.readFileToByteArray(cacheFilePath.toFile());
     }
 }

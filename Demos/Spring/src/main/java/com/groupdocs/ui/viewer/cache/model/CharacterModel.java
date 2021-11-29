@@ -1,12 +1,15 @@
-package com.groupdocs.ui.viewer.cache.jackson.model;
+package com.groupdocs.ui.viewer.cache.model;
+
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.groupdocs.viewer.results.TextElement;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.groupdocs.viewer.results.Character;
 
-public class TextElementModel<T> implements TextElement<T> {
+@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
+public class CharacterModel implements Character {
     @JsonProperty("Value")
-    private final T mValue;
+    private final java.lang.Character mValue;
     @JsonProperty("X")
     private final double mX;
     @JsonProperty("Y")
@@ -17,7 +20,7 @@ public class TextElementModel<T> implements TextElement<T> {
     private final double mHeight;
 
     @JsonCreator
-    public TextElementModel(@JsonProperty("Value") T character, @JsonProperty("X") double x, @JsonProperty("Y") double y, @JsonProperty("Width") double width, @JsonProperty("Height") double height) {
+    public CharacterModel(@JsonProperty("Value") char character, @JsonProperty("X") double x, @JsonProperty("Y") double y, @JsonProperty("Width") double width, @JsonProperty("Height") double height) {
         mValue = character;
         mX = x;
         mY = y;
@@ -26,7 +29,7 @@ public class TextElementModel<T> implements TextElement<T> {
     }
 
     @Override
-    public T getValue() {
+    public java.lang.Character getValue() {
         return mValue;
     }
 

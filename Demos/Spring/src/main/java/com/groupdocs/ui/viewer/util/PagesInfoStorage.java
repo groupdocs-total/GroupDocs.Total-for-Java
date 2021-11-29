@@ -1,11 +1,14 @@
 package com.groupdocs.ui.viewer.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.groupdocs.ui.viewer.exception.DiskAccessException;
 import com.groupdocs.ui.viewer.exception.ReadWriteException;
 import com.groupdocs.viewer.results.Page;
 import com.groupdocs.viewer.results.ViewInfo;
+import com.groupdocs.viewer.utils.PathUtils;
 import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,27 +19,22 @@ public class PagesInfoStorage {
     private static final String FILE_NAME = "PagesInfo.xml";
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    public static int loadPageAngle(Path resourceDir, String documentGuid, int pageNumber) {
+    public static int loadPageAngle(String fileCacheSubFolder, int pageNumber) {
         try {
-            final String subDir = ViewerUtils.replaceChars(Paths.get(documentGuid).getFileName().toString());
-            final Path pagesInfoFile = resourceDir.resolve(subDir).resolve(FILE_NAME);
-            if (Files.notExists(pagesInfoFile)) {
-                return 0;
-            }
-            return MAPPER.readValue(FileUtils.readFileToByteArray(pagesInfoFile.toFile()), PagesInfo.class).getPageByNumber(pageNumber).getAngle();
+            final File pagesInfoFile = new File(fileCacheSubFolder.endsWith(FILE_NAME) ? fileCacheSubFolder : PathUtils.combine(fileCacheSubFolder, FILE_NAME));
+            return MAPPER.readValue(FileUtils.readFileToByteArray(pagesInfoFile), PagesInfo.class).getPageByNumber(pageNumber).getAngle();
         } catch (Exception e) {
             throw new ReadWriteException(e);
         }
     }
 
-    public static void savePageAngle(Path resourceDir, String documentGuid, int pageNumber, int newAngle) {
+    public static void savePageAngle(String fileCacheSubFolder, int pageNumber, int newAngle) {
         try {
-            final String subDir = ViewerUtils.replaceChars(Paths.get(documentGuid).getFileName().toString());
-            Path fileInfoDir = resourceDir.resolve(subDir);
-            if (Files.notExists(fileInfoDir)) {
-                Files.createDirectories(fileInfoDir);
+            Path pagesInfoFile = Paths.get(fileCacheSubFolder.endsWith(FILE_NAME) ? fileCacheSubFolder : PathUtils.combine(fileCacheSubFolder, FILE_NAME));
+
+            if (Files.notExists(pagesInfoFile)) {
+                Files.createDirectories(pagesInfoFile);
             }
-            Path pagesInfoFile = fileInfoDir.resolve(FILE_NAME);
 
             if (Files.exists(pagesInfoFile)) {
                 PagesInfoStorage.PagesInfo pagesInfo = MAPPER.readValue(pagesInfoFile.toFile(), PagesInfoStorage.PagesInfo.class);
@@ -50,10 +48,10 @@ public class PagesInfoStorage {
         }
     }
 
-    public static void createPagesInfo(Path resourceDir, String documentGuid, ViewInfo viewInfo) {
+    public static String createPagesInfo(String fileCacheSubFolder, ViewInfo viewInfo, boolean isViewerLicenseSet) {
         try {
-            final String subDir = ViewerUtils.replaceChars(Paths.get(documentGuid).getFileName().toString());
-            Path fileInfoDir = resourceDir.resolve(subDir);
+            final String subDir = ViewerUtils.replaceChars(fileCacheSubFolder);
+            Path fileInfoDir = Paths.get(subDir);
             if (Files.notExists(fileInfoDir)) {
                 Files.createDirectories(fileInfoDir);
             }
@@ -61,7 +59,12 @@ public class PagesInfoStorage {
             Path pagesInfoPath = fileInfoDir.resolve(FILE_NAME);
             if (Files.notExists(pagesInfoPath)) {
                 final PagesInfoStorage.PagesInfo pagesInfo = new PagesInfoStorage.PagesInfo();
-                for (Page page : viewInfo.getPages()) {
+                List<Page> pages = viewInfo.getPages();
+                for (int i = 0, pagesSize = pages.size(); i < pagesSize; i++) {
+                    Page page = pages.get(i);
+                    if (!isViewerLicenseSet && i == 2) {
+                        break; // only 2 pages in evaluation mode
+                    }
                     final PagesInfoStorage.PagesInfo.PageData pageData = new PagesInfoStorage.PagesInfo.PageData();
                     pageData.setNumber(page.getNumber());
                     pageData.setAngle(0);
@@ -69,8 +72,9 @@ public class PagesInfoStorage {
                 }
                 MAPPER.writeValue(pagesInfoPath.toFile(), pagesInfo);
             }
+            return pagesInfoPath.toAbsolutePath().toString();
         } catch (Exception e) {
-            throw new ReadWriteException(e);
+            throw new DiskAccessException("create pages info directory", fileCacheSubFolder);
         }
     }
 

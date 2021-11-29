@@ -1,18 +1,20 @@
-package com.groupdocs.ui.viewer.cache.jackson.model;
+package com.groupdocs.ui.viewer.cache.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.groupdocs.viewer.FileType;
 import com.groupdocs.viewer.results.Page;
 import com.groupdocs.viewer.results.ViewInfo;
 
 import java.util.List;
 
+@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class ViewInfoModel implements ViewInfo {
     @JsonProperty("FileType")
-    private String mFileType;
+    private final String mFileType;
     @JsonProperty("Pages")
-    private List<Page> mPages;
+    private final List<Page> mPages;
 
     @JsonCreator
     public ViewInfoModel(@JsonProperty("FileType") String fileType, @JsonProperty("Pages") List<Page> pages) {

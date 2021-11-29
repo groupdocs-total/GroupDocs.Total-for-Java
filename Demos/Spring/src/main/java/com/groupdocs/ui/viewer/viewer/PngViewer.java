@@ -1,16 +1,13 @@
 package com.groupdocs.ui.viewer.viewer;
 
+import com.groupdocs.ui.viewer.cache.ViewerCache;
 import com.groupdocs.ui.viewer.config.ViewerConfiguration;
 import com.groupdocs.ui.viewer.util.ViewerUtils;
-import com.groupdocs.viewer.options.ViewOptions;
 import com.groupdocs.viewer.options.PngViewOptions;
-import com.groupdocs.viewer.options.PdfViewOptions;
 import com.groupdocs.viewer.options.Rotation;
 import com.groupdocs.viewer.options.ViewInfoOptions;
 
-import org.apache.commons.io.FileUtils;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
@@ -19,12 +16,12 @@ public class PngViewer extends CustomViewer<PngViewOptions> {
 
     private CustomPageStreamFactory mPageStreamFactory;
 
-    public PngViewer(String filePath, String password, ViewerConfiguration viewerConfiguration) {
-        this(filePath, password, viewerConfiguration, -1, 0);
+    public PngViewer(String filePath, String password, ViewerCache viewerCache, ViewerConfiguration viewerConfiguration) {
+        this(filePath, password, viewerCache, viewerConfiguration, -1, 0);
     }
 
-    public PngViewer(String documentGuid, String password, ViewerConfiguration viewerConfiguration, int pageNumber/* = -1*/, int newAngle/* = 0*/) {
-        super(documentGuid, viewerConfiguration, password);
+    public PngViewer(String documentGuid, String password, ViewerCache viewerCache, ViewerConfiguration viewerConfiguration, int pageNumber/* = -1*/, int newAngle/* = 0*/) {
+        super(documentGuid, viewerCache, viewerConfiguration, password);
         this.viewOptions = this.createPngViewOptions(documentGuid, viewerConfiguration, pageNumber, newAngle);
         this.viewInfoOptions = ViewInfoOptions.fromPngViewOptions(this.viewOptions);
     }
@@ -44,7 +41,7 @@ public class PngViewer extends CustomViewer<PngViewOptions> {
     private PngViewOptions createPngViewOptions(String documentGuid, ViewerConfiguration viewerConfiguration, int passedPageNumber/* = -1*/, int newAngle/* = 0*/) {
         final Path resourcesDir = ViewerUtils.makeResourcesDir(viewerConfiguration);
         final String subFolder = ViewerUtils.replaceChars(Paths.get(documentGuid).getFileName().toString());
-        mPageStreamFactory = new CustomPageStreamFactory(resourcesDir.resolve(subFolder), ".png");
+        mPageStreamFactory = new CustomPageStreamFactory(resourcesDir.resolve(subFolder), ".png", getCache());
         PngViewOptions createdPngViewOptions = new PngViewOptions(mPageStreamFactory);
 
         if (passedPageNumber >= 0 && newAngle != 0) {

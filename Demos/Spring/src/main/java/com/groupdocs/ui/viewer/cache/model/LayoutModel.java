@@ -1,11 +1,13 @@
-package com.groupdocs.ui.viewer.cache.jackson.model;
+package com.groupdocs.ui.viewer.cache.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.groupdocs.viewer.results.Layout;
 
 import java.util.Objects;
 
+@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class LayoutModel implements Layout {
     @JsonProperty("Name")
     private final String mName;
@@ -38,12 +40,14 @@ public class LayoutModel implements Layout {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         LayoutModel that = (LayoutModel) o;
-        return Double.compare(that.mWidth, mWidth) == 0 &&
-                Double.compare(that.mHeight, mHeight) == 0 &&
-                Objects.equals(mName, that.mName);
+        return Double.compare(that.mWidth, mWidth) == 0 && Double.compare(that.mHeight, mHeight) == 0 && Objects.equals(mName, that.mName);
     }
 
     @Override

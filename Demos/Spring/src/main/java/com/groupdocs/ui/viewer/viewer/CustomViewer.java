@@ -1,45 +1,51 @@
 package com.groupdocs.ui.viewer.viewer;
 
-import com.groupdocs.ui.viewer.util.ViewerUtils;
-import com.groupdocs.ui.viewer.cache.FileViewerCache;
 import com.groupdocs.ui.viewer.cache.ViewerCache;
+import com.groupdocs.ui.viewer.cache.model.*;
 import com.groupdocs.ui.viewer.config.ViewerConfiguration;
+import com.groupdocs.ui.viewer.util.ViewerUtils;
 import com.groupdocs.viewer.Viewer;
-import com.groupdocs.viewer.ViewerSettings;
 import com.groupdocs.viewer.options.*;
 import com.groupdocs.viewer.results.ViewInfo;
-import org.apache.logging.log4j.util.Strings;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.util.Strings;
 
 import java.awt.*;
-import java.io.ByteArrayInputStream;
-import java.io.Closeable;
-import java.io.File;
-import java.io.InputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public abstract class CustomViewer<T extends ViewOptions> implements Closeable {
+    private static final Class<?>[] DESERIALIZATION_CLASSES = new Class[]{
+            ArchiveViewInfoModel.class,
+            AttachmentModel.class,
+            CadViewInfoModel.class,
+            CharacterModel.class,
+            FileInfoModel.class,
+            LayerModel.class,
+            LayoutModel.class,
+            LineModel.class,
+            LotusNotesViewInfoModel.class,
+            OutlookViewInfoModel.class,
+            PageModel.class,
+            PdfViewInfoModel.class,
+            ProjectManagementViewInfoModel.class,
+            ViewInfoModel.class,
+            WordModel.class
+    };
     protected final String filePath;
     protected final Viewer viewer;
     protected final ViewerConfiguration viewerConfiguration;
     protected ViewInfoOptions viewInfoOptions;
-    private PdfViewOptions pdfViewOptions;
     protected T viewOptions;
-    ViewerCache mCache;
+    private PdfViewOptions pdfViewOptions;
+    private ViewerCache mCache;
 
-    public CustomViewer(String filePath, ViewerConfiguration viewerConfiguration, String password) {
+    public CustomViewer(String filePath, ViewerCache viewerCache, ViewerConfiguration viewerConfiguration, String password) {
         this.filePath = filePath;
         this.viewerConfiguration = viewerConfiguration;
-        if (viewerConfiguration.isCache()) {
-            Path cacheDir = Paths.get(viewerConfiguration.getFilesDirectory(), viewerConfiguration.getCacheFolderName());
-            // Create cache
-            this.mCache = new FileViewerCache(cacheDir, filePath);
-            this.viewer = new Viewer(filePath, createLoadOptions(password), new ViewerSettings(this.mCache));
-        } else {
-            this.viewer = new Viewer(filePath, createLoadOptions(password));
-        }
+        this.mCache = viewerCache;
+        this.viewer = new Viewer(filePath, createLoadOptions(password));
         this.pdfViewOptions = createPdfViewOptions();
     }
 
@@ -59,6 +65,15 @@ public abstract class CustomViewer<T extends ViewOptions> implements Closeable {
                 return Rotation.ON_270_DEGREE;
         }
         return Rotation.ON_90_DEGREE;
+    }
+
+    protected static LoadOptions createLoadOptions(String password) {
+        final LoadOptions loadOptions = new LoadOptions();
+        loadOptions.setResourceLoadingTimeout(500);
+        if (password != null && !Strings.isEmpty(password)) {
+            loadOptions.setPassword(password);
+        }
+        return loadOptions;
     }
 
     /**
@@ -82,7 +97,25 @@ public abstract class CustomViewer<T extends ViewOptions> implements Closeable {
     }
 
     public ViewInfo getViewInfo() {
-        return viewer.getViewInfo(viewInfoOptions);
+        if (viewerConfiguration.isCache()) {
+            String cacheKey = "view_info.dat";
+
+            if (mCache.doesNotContains(cacheKey)) {
+                synchronized (filePath) {
+                    if (mCache.doesNotContains(cacheKey)) {
+                        return mCache.get(cacheKey, this.readViewInfo(viewInfoOptions), DESERIALIZATION_CLASSES);
+                    }
+                }
+            }
+
+            return mCache.get(cacheKey, null, DESERIALIZATION_CLASSES);
+        } else {
+            return this.readViewInfo(viewInfoOptions);
+        }
+    }
+
+    private ViewInfo readViewInfo(ViewInfoOptions viewInfoOptions) {
+        return getViewer().getViewInfo(viewInfoOptions);
     }
 
     public Viewer getViewer() {
@@ -96,7 +129,7 @@ public abstract class CustomViewer<T extends ViewOptions> implements Closeable {
         final Path pdfFilePath = resourcesFileDir.resolve("f.pdf");
 
         final File pdfFile = pdfFilePath.toFile();
-        if(!pdfFile.exists()) {
+        if (!pdfFile.exists()) {
             this.viewer.view(this.pdfViewOptions);
         }
 
@@ -109,6 +142,7 @@ public abstract class CustomViewer<T extends ViewOptions> implements Closeable {
         }
     }
 
+    @Override
     public void close() {
         this.viewer.close();
     }
@@ -116,23 +150,21 @@ public abstract class CustomViewer<T extends ViewOptions> implements Closeable {
     public abstract String getPageContent(int pageNumber);
 
     public void clearCache(int pageNumber) {
-        mCache.clearCache(pageNumber);
+        if (mCache != null) {
+            mCache.clearCache(pageNumber);
+        }
     }
 
     private com.groupdocs.viewer.options.PdfViewOptions createPdfViewOptions() {
         final Path resourcesDir = ViewerUtils.makeResourcesDir(viewerConfiguration);
         final String subFolder = ViewerUtils.replaceChars(Paths.get(filePath).getFileName().toString());
         PdfViewOptions pdfViewOptions = new PdfViewOptions(
-            new CustomFileStreamFactory(resourcesDir.resolve(subFolder), ".pdf"));
+                new CustomFileStreamFactory(resourcesDir.resolve(subFolder), ".pdf"));
         setWatermarkOptions(pdfViewOptions, viewerConfiguration.getWatermarkText());
         return pdfViewOptions;
     }
 
-    protected static LoadOptions createLoadOptions(String password) {
-        final LoadOptions loadOptions = new LoadOptions();
-        if (password != null && !Strings.isEmpty(password)) {
-            loadOptions.setPassword(password);
-        }
-        return loadOptions;
+    public ViewerCache getCache() {
+        return mCache;
     }
 }

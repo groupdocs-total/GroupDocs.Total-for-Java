@@ -1,17 +1,14 @@
 package com.groupdocs.ui.viewer.viewer;
 
+import com.groupdocs.ui.viewer.cache.ViewerCache;
 import com.groupdocs.ui.viewer.config.ViewerConfiguration;
 import com.groupdocs.ui.viewer.util.ViewerUtils;
 import com.groupdocs.viewer.options.HtmlViewOptions;
-import com.groupdocs.viewer.options.PdfViewOptions;
 import com.groupdocs.viewer.options.Rotation;
 import com.groupdocs.viewer.options.TextOverflowMode;
 import com.groupdocs.viewer.options.ViewInfoOptions;
 
-import org.apache.commons.io.FileUtils;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,12 +18,12 @@ public class HtmlViewer extends CustomViewer<HtmlViewOptions> {
     private CustomPageStreamFactory mPageStreamFactory;
     private CustomResourceStreamFactory mResourceStreamFactory;
 
-    public HtmlViewer(String filePath, String password, ViewerConfiguration viewerConfiguration) {
-        this(filePath, password, viewerConfiguration, -1, 0);
+    public HtmlViewer(String filePath, String password, ViewerCache viewerCache, ViewerConfiguration viewerConfiguration) {
+        this(filePath, password, viewerCache, viewerConfiguration, -1, 0);
     }
 
-    public HtmlViewer(String filePath, String password, ViewerConfiguration viewerConfiguration, int pageNumber/* = -1*/, int newAngle/* = 0*/) {
-        super(filePath, viewerConfiguration, password);
+    public HtmlViewer(String filePath, String password, ViewerCache viewerCache, ViewerConfiguration viewerConfiguration, int pageNumber/* = -1*/, int newAngle/* = 0*/) {
+        super(filePath, viewerCache, viewerConfiguration, password);
         this.viewOptions = this.createHtmlViewOptions(filePath, viewerConfiguration, pageNumber, newAngle);
         this.viewInfoOptions = ViewInfoOptions.fromHtmlViewOptions(this.viewOptions);
     }
@@ -46,7 +43,7 @@ public class HtmlViewer extends CustomViewer<HtmlViewOptions> {
     private com.groupdocs.viewer.options.HtmlViewOptions createHtmlViewOptions(String documentGuid, ViewerConfiguration viewerConfiguration, int passedPageNumber/* = -1*/, int newAngle/* = 0*/) {
         final Path resourcesDir = ViewerUtils.makeResourcesDir(viewerConfiguration);
         final String subFolder = ViewerUtils.replaceChars(Paths.get(documentGuid).getFileName().toString());
-        mPageStreamFactory = new CustomPageStreamFactory(resourcesDir.resolve(subFolder), ".html");
+        mPageStreamFactory = new CustomPageStreamFactory(resourcesDir.resolve(subFolder), ".html", getCache());
         mResourceStreamFactory = new CustomResourceStreamFactory(resourcesDir, subFolder);
         HtmlViewOptions htmlViewOptions = HtmlViewOptions.forExternalResources(mPageStreamFactory, mResourceStreamFactory);
 

@@ -2,17 +2,14 @@ package com.groupdocs.ui.viewer.cache;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.groupdocs.ui.exception.TotalGroupDocsException;
-import com.groupdocs.ui.viewer.cache.jackson.JacksonCacheableFactory;
-import com.groupdocs.ui.viewer.cache.jackson.model.*;
+import com.groupdocs.ui.viewer.cache.model.*;
 import com.groupdocs.ui.viewer.exception.DiskAccessException;
-import com.groupdocs.ui.viewer.util.ViewerUtils;
 import com.groupdocs.viewer.caching.extra.CacheableFactory;
 import com.groupdocs.viewer.results.Character;
 import com.groupdocs.viewer.results.*;
@@ -22,35 +19,12 @@ import org.apache.commons.io.IOUtils;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class FileViewerCache implements ViewerCache {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final long WAIT_TIMEOUT = 100L;
-    private static final Class<?>[] SERIALIZATION_MODELS = new Class[]{
-            ArchiveViewInfoModel.class,
-            AttachmentModel.class,
-            CadViewInfoModel.class,
-            CharacterModel.class,
-            FileInfoModel.class,
-            LayerModel.class,
-            LayoutModel.class,
-            LineModel.class,
-            LotusNotesViewInfoModel.class,
-            OutlookViewInfoModel.class,
-            PageModel.class,
-            PdfViewInfoModel.class,
-            ProjectManagementViewInfoModel.class,
-            TextElementModel.class,
-            ViewInfoModel.class,
-            WordModel.class
-    };
 
     static {
-        // Configure mapper
         MAPPER.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
         MAPPER.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
@@ -70,7 +44,6 @@ public class FileViewerCache implements ViewerCache {
         resolver.addMapping(Page.class, PageModel.class);
         resolver.addMapping(PdfViewInfo.class, PdfViewInfoModel.class);
         resolver.addMapping(ProjectManagementViewInfo.class, ProjectManagementViewInfoModel.class);
-        resolver.addMapping(TextElement.class, TextElementModel.class);
         resolver.addMapping(ViewInfo.class, ViewInfoModel.class);
         resolver.addMapping(Word.class, WordModel.class);
 
@@ -82,27 +55,33 @@ public class FileViewerCache implements ViewerCache {
     /**
      * Gets the Relative or absolute path to the cache folder.
      */
-    private Path mCachePath;
-
-    private String mDocumentGuid;
+    public Path mCachePath;
+    /**
+     * Gets the sub-folder to append to the CachePath.
+     */
+    public String mCacheSubFolder;
 
     /**
      * Initializes a new instance of the FileViewerCache class.
      *
      * @param cachePath or absolute path where document cache will be stored.
      */
-    public FileViewerCache(Path cachePath, String documentGuid) {
+    public FileViewerCache(Path cachePath, String cacheSubFolder) {
         if (cachePath == null) {
             throw new IllegalArgumentException("cachePath");
         }
-        if (documentGuid == null) {
-            throw new IllegalArgumentException("cachePath");
+        if (cacheSubFolder == null) {
+            throw new IllegalArgumentException("cacheSubFolder");
         }
-        // Configure Viewer to use custom cache models for caching
-        CacheableFactory.setInstance(new JacksonCacheableFactory());
 
         this.mCachePath = cachePath;
-        this.mDocumentGuid = documentGuid;
+        this.mCacheSubFolder = cacheSubFolder;
+
+        // Setting factory before using custom models for caching
+        // You still can use embedded implementation of models (*Impl) if you don't need
+        // any specific annotations for serialization. In this way no need to set the factory
+        // Embedded models are just implements Serializable interface
+        CacheableFactory.setInstance(new FileViewerCacheableFactory());
     }
 
     /**
@@ -146,70 +125,55 @@ public class FileViewerCache implements ViewerCache {
      * @return true if the key was found.
      */
     @SuppressWarnings("unchecked")
-    public <T> T get(String key) {
+    public <T> T get(String key, T defaultEntry, Class<?>[] clazzs) {
         Path cacheFilePath = this.getCacheFilePath(key);
         if (Files.notExists(cacheFilePath)) {
-            return null;
+            set(key, defaultEntry);
+            return defaultEntry;
         }
         try (final FileInputStream inputStream = new FileInputStream(cacheFilePath.toFile())) {
+            // Avoid using byte array in case of having big objects
             final byte[] bytes = IOUtils.toByteArray(inputStream);
-            for (Class<?> clazz : SERIALIZATION_MODELS) {
+
+            for (Class<?> clazz : clazzs) {
                 try {
                     return (T) MAPPER.readValue(bytes, clazz);
-                } catch (JsonParseException | JsonMappingException e) {
-                    // continue, is not this type or is stream
+                } catch (JsonMappingException e) {
+                    // continue;
                 }
             }
-            return (T) new ByteArrayInputStream(bytes);
-        } catch (IOException e) {
-            throw new TotalGroupDocsException("Cache loading error", e);
-        }
-    }
-
-    @Override
-    public List<String> getKeys(String s) {
-        Path folderPath = this.getCachePath();
-        if (Files.exists(folderPath)) {
+            final InputStream fileInputStream = new ByteArrayInputStream(bytes);
             try {
-                return Files.list(folderPath)
-                        .filter(item -> Files.isDirectory(item))
-                        .map(path -> path.getFileName().toString())
-                        .collect(Collectors.toList());
+                return (T) fileInputStream;
             } catch (Exception e) {
-                throw new DiskAccessException("list files", folderPath);
+                fileInputStream.close();
+                throw new TotalGroupDocsException("Cache file '" + cacheFilePath + "' was not deserialized correctly!", e);
             }
+        } catch (IOException e) {
+            throw new TotalGroupDocsException("Cache loading error - IO exception", e);
         }
-        return new ArrayList<>();
     }
-
 
     @Override
     public Path getCacheFilePath(String key) {
-        Path cachePath = this.getCachePath();
+        Path folderPath = this.getCachePath().resolve(this.getCacheSubFolder());
+        Path filePath = folderPath.resolve(key);
 
-        final String fileSubDir = ViewerUtils.replaceChars(Paths.get(mDocumentGuid).getFileName().toString());
-        final Path folderPath = cachePath.resolve(fileSubDir);
         try {
-            if (Files.notExists(folderPath)) {
+            if (!Files.exists(folderPath)) {
                 Files.createDirectories(folderPath);
             }
         } catch (IOException e) {
-            throw new DiskAccessException("create cache directory", folderPath);
+            throw new DiskAccessException("can't create directory", folderPath.toAbsolutePath().toString());
         }
 
-        return folderPath.resolve(key);
+        return filePath;
     }
 
     @Override
-    public void clearCache(int pageNumber) {
-        // Get folder with cache for current file
-        Path filePath = this.getCacheFilePath("");
-        try {
-            FileUtils.deleteDirectory(filePath.toFile());
-        } catch (IOException e) {
-            System.err.println("Can't clear cache folder");
-            throw new RuntimeException(e);
-        }
+    public boolean doesNotContains(String key) {
+        Path file = this.getCachePath().resolve(this.getCacheSubFolder()).resolve(key);
+        return Files.notExists(file);
     }
 
     private OutputStream getStream(Path path) throws FileNotFoundException, InterruptedException {
@@ -232,8 +196,24 @@ public class FileViewerCache implements ViewerCache {
         return stream;
     }
 
+    public void clearCache(int pageNumber) {
+        // Get folder with cache for current file
+        Path filePath = this.getCacheFilePath("");
+        try {
+            FileUtils.deleteDirectory(filePath.toFile());
+        } catch (IOException e) {
+            System.err.println("Can't clear cache folder");
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public Path getCachePath() {
         return mCachePath;
+    }
+
+    @Override
+    public String getCacheSubFolder() {
+        return mCacheSubFolder;
     }
 }

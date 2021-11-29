@@ -1,10 +1,12 @@
-package com.groupdocs.ui.viewer.cache.jackson.model;
+package com.groupdocs.ui.viewer.cache.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.groupdocs.viewer.FileType;
 import com.groupdocs.viewer.results.FileInfo;
 
+@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class FileInfoModel implements FileInfo {
     @JsonProperty("FileType")
     private final String mFileType;

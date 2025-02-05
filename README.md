@@ -27,7 +27,7 @@ GroupDocs.Total for Java does not have standalone examples, as the project is a 
 
 **GroupDocs.Total for Java API** is a comprehensive suite of powerful, flexible, and high-performance libraries designed to seamlessly integrate document manipulation capabilities into your desktop and web applications—without the need for any other commercial software. With **GroupDocs.Total**, you can perform a wide range of operations such as viewing, editing, annotating, signing, comparing, converting, merging, searching, parsing, redacting, and more, across **PDF, DOCX, PPT, XLS**, and over 90 other document formats.
 
-This web application demonstrates the following document manipulation features:
+GroupDocs.Total for Java includes the following document manipulation features:
 
 - Document viewing
 - Annotation and writing on documents
@@ -35,9 +35,6 @@ This web application demonstrates the following document manipulation features:
 - Document comparison
 - Document editing
 - Document conversion
-
-**Note:** Without a valid license, the application will operate in trial mode. You can purchase a [GroupDocs.Total for Java license](https://purchase.groupdocs.com/order-online-step-1-of-8.aspx) or request a [GroupDocs.Total for Java temporary license](https://purchase.groupdocs.com/temporary-license).
-
 
 ## Supported document Formats
 
@@ -69,7 +66,7 @@ The MIT License (MIT).
 Please have a look at the [LICENSE.md](https://github.com/groupdocs-total/GroupDocs.Total-for-Java/blob/main/LICENSE) for more details.
 
 ## GroupDocs Total on other platforms & frameworks
-- [GroupDocs.Total Releases (.NET and Java)](https://releases.groupdocs.com/ru/total/)**
+- [GroupDocs.Total Releases (.NET and Java)](https://releases.groupdocs.com/ru/total/)
 - [GroupDocs.Total for .NET Samples](https://github.com/groupdocs-total/GroupDocs.Total-for-.NET)
 - [Angular based UI for GroupDocs.Total products](https://github.com/groupdocs-total/GroupDocs.Total-Angular)
 

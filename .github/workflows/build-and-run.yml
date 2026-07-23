@@ -1,0 +1,28 @@
+name: Build and Run Examples
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and run (JDK 8)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+          cache: maven
+
+      - name: Compile
+        run: mvn -B -q -f Examples/pom.xml clean compile
+
+      - name: Run examples
+        run: mvn -B -q -f Examples/pom.xml exec:java -Djava.awt.headless=true

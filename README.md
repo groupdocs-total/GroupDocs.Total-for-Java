@@ -1,82 +1,96 @@
-# GroupDocs.Total for Java Examples
+# GroupDocs.Total for Java - Code Examples
 
-GroupDocs.Total for Java does not have standalone examples, as the project is a compilation of all GroupDocs products. Below are the links to examples for each product, which you can use to get started with GroupDocs.Total for Java.
+Runnable code for [GroupDocs.Total for Java](https://products.groupdocs.com/total/java/) — one Maven
+artifact containing every GroupDocs document API: viewing, conversion, comparison, signing,
+annotation, editing, metadata, search, watermarking, merging, parsing and redaction.
 
-| Product                                                                      |                                                                                         |                                                                    |                                                              |                                                                                                                                                                                                           |
-|------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|--------------------------------------------------------------------|--------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [GroupDocs.Annotation for Java](https://docs.groupdocs.com/annotation/java/) | [**Examples**](https://github.com/groupdocs-annotation/GroupDocs.Annotation-for-Java)   | [API References](https://reference.groupdocs.com/annotation/java/) | [Documentation](https://docs.groupdocs.com/annotation/java/) | [![MIT License](https://img.shields.io/github/license/groupdocs-annotation/GroupDocs.Annotation-for-Java.svg)](https://github.com/groupdocs-annotation/GroupDocs.Annotation-for-Java/blob/master/LICENSE) |
-| [GroupDocs.Assembly for Java](https://docs.groupdocs.com/assembly/java/)     | [**Examples**](https://github.com/groupdocs-assembly/GroupDocs.Assembly-for-Java)       | [API References](https://reference.groupdocs.com/assembly/java/)   | [Documentation](https://docs.groupdocs.com/assembly/java/)   | [![MIT License](https://img.shields.io/github/license/groupdocs-assembly/GroupDocs.Assembly-for-Java.svg)](https://github.com/groupdocs-assembly/GroupDocs.Assembly-for-Java/blob/master/LICENSE)         |
-| [GroupDocs.Comparison for Java](https://docs.groupdocs.com/comparison/java/) | [**Examples**](https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java)   | [API References](https://reference.groupdocs.com/comparison/java/) | [Documentation](https://docs.groupdocs.com/comparison/java/) | [![MIT License](https://img.shields.io/github/license/groupdocs-comparison/GroupDocs.Comparison-for-Java.svg)](https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java/blob/master/LICENSE) |
-| [GroupDocs.Conversion for Java](https://docs.groupdocs.com/conversion/java/) | [**Examples**](https://github.com/groupdocs-conversion/GroupDocs.Conversion-for-Java)   | [API References](https://reference.groupdocs.com/conversion/java/) | [Documentation](https://docs.groupdocs.com/conversion/java/) | [![MIT License](https://img.shields.io/github/license/groupdocs-conversion/GroupDocs.Conversion-for-Java.svg)](https://github.com/groupdocs-conversion/GroupDocs.Conversion-for-Java/blob/master/LICENSE) |
-| [GroupDocs.Editor for Java](https://docs.groupdocs.com/editor/java/)         | [**Examples**](https://github.com/groupdocs-editor/GroupDocs.Editor-for-Java)           | [API References](https://reference.groupdocs.com/editor/java/)     | [Documentation](https://docs.groupdocs.com/editor/java/)     | [![MIT License](https://img.shields.io/github/license/groupdocs-editor/GroupDocs.Editor-for-Java.svg)](https://github.com/groupdocs-editor/GroupDocs.Editor-for-Java/blob/master/LICENSE)                 |
-| [GroupDocs.Merger for Java](https://docs.groupdocs.com/merger/java/)         | [**Examples**](https://github.com/groupdocs-merger/GroupDocs.Merger-for-Java)           | [API References](https://reference.groupdocs.com/merger/java/)     | [Documentation](https://docs.groupdocs.com/merger/java/)     | [![MIT License](https://img.shields.io/github/license/groupdocs-merger/GroupDocs.Merger-for-Java.svg)](https://github.com/groupdocs-merger/GroupDocs.Merger-for-Java/blob/master/LICENSE)                 |
-| [GroupDocs.Metadata for Java](https://docs.groupdocs.com/metadata/java/)     | [**Examples**](https://github.com/groupdocs-metadata/GroupDocs.Metadata-for-Java)       | [API References](https://reference.groupdocs.com/metadata/java/)   | [Documentation](https://docs.groupdocs.com/metadata/java/)   | [![MIT License](https://img.shields.io/github/license/groupdocs-metadata/GroupDocs.Metadata-for-Java.svg)](https://github.com/groupdocs-metadata/GroupDocs.Metadata-for-Java/blob/master/LICENSE)         |
-| [GroupDocs.Parser for Java](https://docs.groupdocs.com/parser/java/)         | [**Examples**](https://github.com/groupdocs-parser/GroupDocs.Parser-for-Java)           | [API References](https://reference.groupdocs.com/parser/java/)     | [Documentation](https://docs.groupdocs.com/parser/java/)     | [![MIT License](https://img.shields.io/github/license/groupdocs-parser/GroupDocs.Parser-for-Java.svg)](https://github.com/groupdocs-parser/GroupDocs.Parser-for-Java/blob/master/LICENSE)                 |
-| [GroupDocs.Redaction for Java](https://docs.groupdocs.com/redaction/java/)   | [**Examples**](https://github.com/groupdocs-redaction/GroupDocs.Redaction-for-Java)     | [API References](https://reference.groupdocs.com/redaction/java/)  | [Documentation](https://docs.groupdocs.com/redaction/java/)  | [![MIT License](https://img.shields.io/github/license/groupdocs-redaction/GroupDocs.Redaction-for-Java.svg)](https://github.com/groupdocs-redaction/GroupDocs.Redaction-for-Java/blob/master/LICENSE)     |
-| [GroupDocs.Search for Java](https://docs.groupdocs.com/search/java/)         | [**Examples**](https://github.com/groupdocs-search/GroupDocs.Search-for-Java)           | [API References](https://reference.groupdocs.com/search/java/)     | [Documentation](https://docs.groupdocs.com/search/java/)     | [![MIT License](https://img.shields.io/github/license/groupdocs-search/GroupDocs.Search-for-Java.svg)](https://github.com/groupdocs-search/GroupDocs.Search-for-Java/blob/master/LICENSE)                 |
-| [GroupDocs.Signature for Java](https://docs.groupdocs.com/signature/java/)   | [**Examples**](https://github.com/groupdocs-signature/GroupDocs.Signature-for-Java)     | [API References](https://reference.groupdocs.com/signature/java/)  | [Documentation](https://docs.groupdocs.com/signature/java/)  | [![MIT License](https://img.shields.io/github/license/groupdocs-signature/GroupDocs.Signature-for-Java.svg)](https://github.com/groupdocs-signature/GroupDocs.Signature-for-Java/blob/master/LICENSE)     |
-| [GroupDocs.Viewer for Java](https://docs.groupdocs.com/viewer/java/)         | [**Examples**](https://github.com/groupdocs-viewer/GroupDocs.Viewer-for-Java)           | [API References](https://reference.groupdocs.com/viewer/java/)     | [Documentation](https://docs.groupdocs.com/viewer/java/)     | [![MIT License](https://img.shields.io/github/license/groupdocs-viewer/GroupDocs.Viewer-for-Java.svg)](https://github.com/groupdocs-viewer/GroupDocs.Viewer-for-Java/blob/master/LICENSE)                 |
-| [GroupDocs.Watermark for Java](https://docs.groupdocs.com/watermark/java/)   | [**Examples**](https://github.com/groupdocs-watermark/GroupDocs.Watermark-for-Java)     | [API References](https://reference.groupdocs.com/watermark/java/)  | [Documentation](https://docs.groupdocs.com/watermark/java/)  | [![MIT License](https://img.shields.io/github/license/groupdocs-watermark/GroupDocs.Watermark-for-Java.svg)](https://github.com/groupdocs-watermark/GroupDocs.Watermark-for-Java/blob/master/LICENSE)     |
+## Examples
 
+[`Examples/`](Examples) holds a small, self-contained class per feature across all 12 bundled
+products — each opens a sample file, does one thing, and writes an output. It is the same code
+published on the
+[GroupDocs.Total for Java developer guide](https://docs.groupdocs.com/total/java/developer-guide/),
+and the sample files sit next to the code that uses them, so an example runs with no setup.
 
-## System Requirements
-- Java 8 (JDK 1.8)
-- Maven 3
+```bash
+cd Examples
 
-## All-in-One Document Automation API
+# Run every example
+mvn -q compile exec:java
 
-**GroupDocs.Total for Java API** is a comprehensive suite of powerful, flexible, and high-performance libraries designed to seamlessly integrate document manipulation capabilities into your desktop and web applications—without the need for any other commercial software. With **GroupDocs.Total**, you can perform a wide range of operations such as viewing, editing, annotating, signing, comparing, converting, merging, searching, parsing, redacting, and more, across **PDF, DOCX, PPT, XLS**, and over 90 other document formats.
+# List every example, then run one on its own
+mvn -q compile exec:java -Dexec.args="--list"
+mvn -q compile exec:java -Dexec.args="--example ViewerRenderToHtml"
+```
 
-GroupDocs.Total for Java includes the following document manipulation features:
+The `groupdocs-total` package is served from the
+[GroupDocs Java repository](https://releases.groupdocs.com/java/repo/) — declared in
+[`Examples/pom.xml`](Examples/pom.xml), it is **not** on Maven Central. See
+[`Examples/README.md`](Examples/README.md) for the full walkthrough.
 
-- Document viewing
-- Annotation and writing on documents
-- Digital document signing
-- Document comparison
-- Document editing
-- Document conversion
+> **`Examples/` is generated, not hand-written.** Every example is extracted from the documentation
+> by the `docs-to-code-examples` pipeline, compiled, executed, and its real output published back
+> into the [developer guide](https://docs.groupdocs.com/total/java/developer-guide/) page it came
+> from. That is what keeps the two in step. **Edit the documentation, not the generated code** — a
+> change made here is overwritten on the next run.
 
-## Supported document Formats
+## Requirements
 
-| **Family**                    | **Formats**                                                                                                                                                                          |
-|-------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **CAD**                       | CF2, DGN, DWF, DWFX, DWG, DWT, DXF, IFC, IGS, PLT, STL                                                                                                                               |
-| **Compression**               | 7Z, BZ2, CAB, CPIO, GZ, GZIP, LZ, LZMA, RAR, TAR, XZ, Z, ZIP                                                                                                                         |
-| **Database**                  | LOG, NSF, SQL                                                                                                                                                                        |
-| **Diagram**                   | VDX, VSD, VSDM, VSDX, VSS, VSSM, VSSX, VST, VSTM, VSTX, VSX, VTX                                                                                                                     |
-| **eBook**                     | AZW3, EPUB, MOBI                                                                                                                                                                     |
-| **Email and Outlook**         | EML, EMLX, MBOX, MSG, OST, PST, VCF                                                                                                                                                  |
-| **Font**                      | CFF, EOT, OTF, PFB, TTF, WOFF, WOFF2                                                                                                                                                 |
-| **Image**                     | AI, BMP, CDR, CMX, DCM, DIB, DICOM, DJVU, DNG, EMF, EMZ, FODG, GIF, ICO, J2C, J2K, JP2, JPC, JPEG, JPF, JPG, JPM, JPX, ODG, OTG, PNG, PSB, PSD, SVGZ, TGA, TIF, TIFF, WEBP, WMF, WMZ |
-| **Note**                      | ONE                                                                                                                                                                                  |
-| **Page Description Language** | CGM, EPS, OXPS, PCL, PS, SVG, TEX, XPS                                                                                                                                               |
-| **PDF**                       | PDF                                                                                                                                                                                  |
-| **Presentation**              | FODP, ODP, OTP, POT, POTM, POTX, PPS, PPSM, PPSX, PPT, PPTM, PPTX                                                                                                                    |
-| **Project Management**        | MPP, MPT, MPX, XER                                                                                                                                                                   |
-| **Publisher**                 | PUB                                                                                                                                                                                  |
-| **Spreadsheet**               | CSV, FODS, NUMBERS, ODS, OTS, SXC, TSV, XLAM, XLS, XLSB, XLSM, XLSX, XLT, XLTM, XLTX                                                                                                 |
-| **Web**                       | CHM, HTM, HTML, JSON, MHT, MHTML, VDW, XML                                                                                                                                           |
-| **Word Processing**           | DOC, DOCM, DOCX, DOT, DOTM, DOTX, MD, ODT, OTT, RTF, TXT                                                                                                                             |
+- **JDK 8** (or later) and **Apache Maven 3**
+- A GroupDocs license is optional: without one the APIs run in evaluation mode and add trial
+  watermarks to output. Set the `GROUPDOCS_LIC_PATH` environment variable to a `*.lic` file, or drop
+  one next to where you run the examples. You can
+  [request a temporary license](https://purchase.groupdocs.com/temporary-license) to remove the
+  watermarks.
 
-_More formats are supported in specific products._
+## All-in-one document automation API
+
+**GroupDocs.Total for Java** is a comprehensive suite of high-performance libraries that integrate
+document manipulation into desktop and web applications — no other commercial software required.
+Across **PDF, DOCX, PPTX, XLSX** and 90+ other formats it can:
+
+- **View** documents as HTML, PDF or images
+- **Convert** between 170+ formats
+- **Compare** two versions and accept or reject changes
+- **Sign** documents and search or verify signatures
+- **Annotate** documents and read the markup back
+- **Edit** documents through an HTML round trip
+- **Read and edit metadata**, **search** document collections, **watermark**, **merge/split**,
+  **parse** text and data, and **redact** sensitive content
+
+> GroupDocs.Assembly, GroupDocs.Markdown and GroupDocs.Classification are separate products and are
+> not part of the GroupDocs.Total for Java artifact.
+
+## Individual product examples
+
+Each bundled product also ships its own, deeper example repository:
+
+| Product | Examples | API Reference | Documentation |
+|---|---|---|---|
+| [Annotation](https://docs.groupdocs.com/annotation/java/) | [Examples](https://github.com/groupdocs-annotation/GroupDocs.Annotation-for-Java) | [API](https://reference.groupdocs.com/annotation/java/) | [Docs](https://docs.groupdocs.com/annotation/java/) |
+| [Comparison](https://docs.groupdocs.com/comparison/java/) | [Examples](https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java) | [API](https://reference.groupdocs.com/comparison/java/) | [Docs](https://docs.groupdocs.com/comparison/java/) |
+| [Conversion](https://docs.groupdocs.com/conversion/java/) | [Examples](https://github.com/groupdocs-conversion/GroupDocs.Conversion-for-Java) | [API](https://reference.groupdocs.com/conversion/java/) | [Docs](https://docs.groupdocs.com/conversion/java/) |
+| [Editor](https://docs.groupdocs.com/editor/java/) | [Examples](https://github.com/groupdocs-editor/GroupDocs.Editor-for-Java) | [API](https://reference.groupdocs.com/editor/java/) | [Docs](https://docs.groupdocs.com/editor/java/) |
+| [Merger](https://docs.groupdocs.com/merger/java/) | [Examples](https://github.com/groupdocs-merger/GroupDocs.Merger-for-Java) | [API](https://reference.groupdocs.com/merger/java/) | [Docs](https://docs.groupdocs.com/merger/java/) |
+| [Metadata](https://docs.groupdocs.com/metadata/java/) | [Examples](https://github.com/groupdocs-metadata/GroupDocs.Metadata-for-Java) | [API](https://reference.groupdocs.com/metadata/java/) | [Docs](https://docs.groupdocs.com/metadata/java/) |
+| [Parser](https://docs.groupdocs.com/parser/java/) | [Examples](https://github.com/groupdocs-parser/GroupDocs.Parser-for-Java) | [API](https://reference.groupdocs.com/parser/java/) | [Docs](https://docs.groupdocs.com/parser/java/) |
+| [Redaction](https://docs.groupdocs.com/redaction/java/) | [Examples](https://github.com/groupdocs-redaction/GroupDocs.Redaction-for-Java) | [API](https://reference.groupdocs.com/redaction/java/) | [Docs](https://docs.groupdocs.com/redaction/java/) |
+| [Search](https://docs.groupdocs.com/search/java/) | [Examples](https://github.com/groupdocs-search/GroupDocs.Search-for-Java) | [API](https://reference.groupdocs.com/search/java/) | [Docs](https://docs.groupdocs.com/search/java/) |
+| [Signature](https://docs.groupdocs.com/signature/java/) | [Examples](https://github.com/groupdocs-signature/GroupDocs.Signature-for-Java) | [API](https://reference.groupdocs.com/signature/java/) | [Docs](https://docs.groupdocs.com/signature/java/) |
+| [Viewer](https://docs.groupdocs.com/viewer/java/) | [Examples](https://github.com/groupdocs-viewer/GroupDocs.Viewer-for-Java) | [API](https://reference.groupdocs.com/viewer/java/) | [Docs](https://docs.groupdocs.com/viewer/java/) |
+| [Watermark](https://docs.groupdocs.com/watermark/java/) | [Examples](https://github.com/groupdocs-watermark/GroupDocs.Watermark-for-Java) | [API](https://reference.groupdocs.com/watermark/java/) | [Docs](https://docs.groupdocs.com/watermark/java/) |
+
+## Resources
+
+- **Product page:** [GroupDocs.Total for Java](https://products.groupdocs.com/total/java/)
+- **Documentation:** [docs.groupdocs.com/total/java](https://docs.groupdocs.com/total/java/)
+- **Developer guide:** [every product, with runnable examples](https://docs.groupdocs.com/total/java/developer-guide/)
+- **API reference:** [reference.groupdocs.com](https://reference.groupdocs.com/)
+- **Releases:** [GroupDocs Java repository](https://releases.groupdocs.com/total/java/)
+- **Free support:** [Forum](https://forum.groupdocs.com/c/total)
+- **Paid support:** [Helpdesk](https://helpdesk.groupdocs.com)
+- **Blog:** [GroupDocs.Total](https://blog.groupdocs.com/category/groupdocs-total-product-family)
 
 ## License
 
-The MIT License (MIT).
-Please have a look at the [LICENSE.md](https://github.com/groupdocs-total/GroupDocs.Total-for-Java/blob/main/LICENSE) for more details.
-
-## GroupDocs Total on other platforms & frameworks
-- [GroupDocs.Total Releases (.NET and Java)](https://releases.groupdocs.com/ru/total/)
-- [GroupDocs.Total for .NET Samples](https://github.com/groupdocs-total/GroupDocs.Total-for-.NET)
-- [Angular based UI for GroupDocs.Total products](https://github.com/groupdocs-total/GroupDocs.Total-Angular)
-
-## Resources
-- **Online GroupDocs App Product Families:** [products.groupdocs.app](https://products.groupdocs.app/)
-- **Website:** [www.groupdocs.com](https://www.groupdocs.com)
-- **Product Home:** [GroupDocs.Total for Java](https://products.groupdocs.com/total/java)
-- **Product API References:** [GroupDocs.Total for Java API](https://apireference.groupdocs.com)
-- **Download:** [Download GroupDocs.Total for Java](http://downloads.groupdocs.com/total/java)
-- **Documentation:** [GroupDocs.Total for Java Documentation](https://docs.groupdocs.com/dashboard.action)
-- **Free Support Forum:** [GroupDocs.Total for Java Free Support Forum](https://forum.groupdocs.com/c/total)
-- **Paid Support Helpdesk:** [GroupDocs.Total for Java Paid Support Helpdesk](https://helpdesk.groupdocs.com)
-- **Blog:** [GroupDocs.Total for Java Blog](https://blog.groupdocs.com/category/groupdocs-total-product-family)
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.

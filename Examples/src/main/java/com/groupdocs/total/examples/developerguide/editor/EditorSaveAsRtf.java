@@ -1,0 +1,20 @@
+package com.groupdocs.total.examples.developerguide.editor;
+
+import com.groupdocs.editor.EditableDocument;
+import com.groupdocs.editor.Editor;
+import com.groupdocs.editor.formats.WordProcessingFormats;
+import com.groupdocs.editor.options.WordProcessingEditOptions;
+import com.groupdocs.editor.options.WordProcessingSaveOptions;
+
+public class EditorSaveAsRtf {
+    public static void run() throws Exception {
+        Editor editor = new Editor("contract.docx");
+
+        EditableDocument document = editor.edit(new WordProcessingEditOptions());
+
+        editor.save(document, "editor-save-as-rtf.rtf",
+            new WordProcessingSaveOptions(WordProcessingFormats.Rtf));
+
+        System.out.println("Saved editor-save-as-rtf.rtf");
+    }
+}

@@ -1,0 +1,20 @@
+package com.groupdocs.total.examples.developerguide.metadata;
+
+import com.groupdocs.metadata.Metadata;
+import com.groupdocs.metadata.core.MetadataProperty;
+import com.groupdocs.metadata.search.ContainsTagSpecification;
+import com.groupdocs.metadata.tagging.Tags;
+
+public class MetadataFindProperties {
+    public static void run() throws Exception {
+        try (Metadata metadata = new Metadata("contract.docx")) {
+            // Every property tagged as identifying the person who created the document
+            Iterable<MetadataProperty> properties = metadata.findProperties(
+                new ContainsTagSpecification(Tags.getPerson().getCreator()));
+
+            for (MetadataProperty property : properties) {
+                System.out.println(property.getName() + " = " + property.getValue());
+            }
+        }
+    }
+}

@@ -1,0 +1,63 @@
+name: Update Dependency Version
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-package:
+    name: Check for groupdocs-total updates
+    runs-on: ubuntu-latest
+    env:
+      PKG_LIST: "com.groupdocs:groupdocs-total"
+      REPO_URL: "https://releases.groupdocs.com/java/repo"
+      POM: Examples/pom.xml
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for updates and bump versions
+        id: versions
+        run: |
+          NEEDS=false
+          NOTES=""
+          for entry in $PKG_LIST; do
+            GID=$(echo "$entry" | cut -d: -f1)
+            AID=$(echo "$entry" | cut -d: -f2)
+            GPATH=$(echo "$GID" | tr '.' '/')
+
+            CURRENT=$(mvn -q -f "$POM" help:evaluate -Dexpression=project.version -DforceStdout \
+              org.apache.maven.plugins:maven-help-plugin:3.4.0:evaluate 2>/dev/null || true)
+
+            META="$REPO_URL/$GPATH/$AID/maven-metadata.xml"
+            LATEST=$(curl -sf "$META" | grep -oP '(?<=<release>)[^<]+' | head -1)
+            if [ -z "$LATEST" ]; then
+              LATEST=$(curl -sf "$META" | grep -oP '(?<=<latest>)[^<]+' | head -1)
+            fi
+            if [ -z "$LATEST" ]; then
+              echo "::error::Could not determine latest version for $AID"
+              exit 1
+            fi
+
+            INPOM=$(grep -oP '(?<=<version>)[^<]+' "$POM" | head -2 | tail -1)
+            echo "$AID: $INPOM -> $LATEST"
+            if [ "$INPOM" != "$LATEST" ]; then
+              NEEDS=true
+              NOTES="$NOTES $AID $LATEST,"
+              sed -i "0,/<artifactId>$AID<\/artifactId>/{n;s|<version>[^<]*</version>|<version>$LATEST</version>|}" "$POM"
+            fi
+          done
+          echo "needs_update=$NEEDS" >> "$GITHUB_OUTPUT"
+          echo "notes=$(echo "$NOTES" | sed 's/,$//;s/^ //')" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push
+        if: steps.versions.outputs.needs_update == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$POM"
+          git commit -m "Update ${{ steps.versions.outputs.notes }}"
+          git push

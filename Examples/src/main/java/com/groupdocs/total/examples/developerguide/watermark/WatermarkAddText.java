@@ -1,5 +1,6 @@
 package com.groupdocs.total.examples.developerguide.watermark;
 
+import com.groupdocs.total.examples.ExampleFiles;
 import com.groupdocs.watermark.Watermarker;
 import com.groupdocs.watermark.common.HorizontalAlignment;
 import com.groupdocs.watermark.common.VerticalAlignment;
@@ -10,7 +11,7 @@ import com.groupdocs.watermark.watermarks.TextWatermark;
 
 public class WatermarkAddText {
     public static void run() throws Exception {
-        try (Watermarker watermarker = new Watermarker("contract.docx")) {
+        try (Watermarker watermarker = new Watermarker(ExampleFiles.path("contract.docx"))) {
             TextWatermark watermark = new TextWatermark(
                 "CONFIDENTIAL", new Font("Arial", 42, FontStyle.Bold));
 
@@ -21,7 +22,7 @@ public class WatermarkAddText {
             watermark.setVerticalAlignment(VerticalAlignment.Center);
 
             watermarker.add(watermark);
-            watermarker.save("watermark-add-text.docx");
+            watermarker.save(ExampleFiles.output("watermark-add-text.docx"));
         }
     }
 }

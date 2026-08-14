@@ -2,10 +2,11 @@ package com.groupdocs.total.examples.developerguide.parser;
 
 import com.groupdocs.parser.Parser;
 import com.groupdocs.parser.data.TextReader;
+import com.groupdocs.total.examples.ExampleFiles;
 
 public class ParserExtractPage {
     public static void run() throws Exception {
-        try (Parser parser = new Parser("contract.docx")) {
+        try (Parser parser = new Parser(ExampleFiles.path("contract.docx"))) {
             // Read the first page only; the page index is zero-based
             try (TextReader reader = parser.getText(0)) {
                 if (reader == null) {

@@ -6,11 +6,12 @@ import com.groupdocs.redaction.RedactorChangeLog;
 import com.groupdocs.redaction.options.RasterizationOptions;
 import com.groupdocs.redaction.redactions.RegexRedaction;
 import com.groupdocs.redaction.redactions.ReplacementOptions;
+import com.groupdocs.total.examples.ExampleFiles;
 import java.io.FileOutputStream;
 
 public class RedactionRegex {
     public static void run() throws Exception {
-        try (Redactor redactor = new Redactor("contract.docx")) {
+        try (Redactor redactor = new Redactor(ExampleFiles.path("contract.docx"))) {
             // Any currency amount such as "120,000 USD"
             RedactorChangeLog result = redactor.apply(
                 new RegexRedaction("\\d{1,3}(,\\d{3})*\\s?USD", new ReplacementOptions("[AMOUNT]")));
@@ -20,7 +21,7 @@ public class RedactionRegex {
             if (result.getStatus() != RedactionStatus.Failed) {
                 RasterizationOptions rasterizationOptions = new RasterizationOptions();
                 rasterizationOptions.setEnabled(false);
-                try (FileOutputStream output = new FileOutputStream("redaction-regex.docx")) {
+                try (FileOutputStream output = new FileOutputStream(ExampleFiles.output("redaction-regex.docx"))) {
                     redactor.save(output, rasterizationOptions);
                 }
             }

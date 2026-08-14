@@ -4,11 +4,12 @@ import com.groupdocs.search.Index;
 import com.groupdocs.search.options.SearchOptions;
 import com.groupdocs.search.options.TableDiscreteFunction;
 import com.groupdocs.search.results.SearchResult;
+import com.groupdocs.total.examples.ExampleFiles;
 
 public class SearchFuzzy {
     public static void run() throws Exception {
-        try (Index index = new Index("search-fuzzy/index")) {
-            index.add("archive");
+        try (Index index = new Index(ExampleFiles.output("search-fuzzy/index"))) {
+            index.add(ExampleFiles.path("archive"));
 
             SearchOptions options = new SearchOptions();
             options.getFuzzySearch().setEnabled(true);

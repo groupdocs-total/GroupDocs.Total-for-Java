@@ -3,14 +3,15 @@ package com.groupdocs.total.examples.developerguide.search;
 import com.groupdocs.search.Index;
 import com.groupdocs.search.results.FoundDocument;
 import com.groupdocs.search.results.SearchResult;
+import com.groupdocs.total.examples.ExampleFiles;
 import java.io.File;
 
 public class SearchBuildIndex {
     public static void run() throws Exception {
         // The index is a folder the library owns; keep it out of your documents folder
-        try (Index index = new Index("search-build-index/index")) {
+        try (Index index = new Index(ExampleFiles.output("search-build-index/index"))) {
             // Index every supported document in the folder
-            index.add("archive");
+            index.add(ExampleFiles.path("archive"));
 
             SearchResult result = index.search("throughput");
 

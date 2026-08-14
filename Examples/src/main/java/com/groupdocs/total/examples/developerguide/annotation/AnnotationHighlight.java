@@ -3,12 +3,13 @@ package com.groupdocs.total.examples.developerguide.annotation;
 import com.groupdocs.annotation.Annotator;
 import com.groupdocs.annotation.models.Point;
 import com.groupdocs.annotation.models.annotationmodels.HighlightAnnotation;
+import com.groupdocs.total.examples.ExampleFiles;
 import java.util.Arrays;
 import java.util.List;
 
 public class AnnotationHighlight {
     public static void run() throws Exception {
-        try (Annotator annotator = new Annotator("contract.docx")) {
+        try (Annotator annotator = new Annotator(ExampleFiles.path("contract.docx"))) {
             // Corner points of the region to highlight
             List<Point> points = Arrays.asList(
                 new Point(80, 730),
@@ -24,7 +25,7 @@ public class AnnotationHighlight {
             highlight.setOpacity(0.5);
 
             annotator.add(highlight);
-            annotator.save("annotation-highlight.pdf");
+            annotator.save(ExampleFiles.output("annotation-highlight.pdf"));
         }
     }
 }

@@ -5,20 +5,21 @@ import com.groupdocs.signature.domain.qrcodes.QrCodeTypes;
 import com.groupdocs.signature.domain.signatures.QrCodeSignature;
 import com.groupdocs.signature.options.search.QrCodeSearchOptions;
 import com.groupdocs.signature.options.sign.QrCodeSignOptions;
+import com.groupdocs.total.examples.ExampleFiles;
 import java.util.List;
 
 public class SignatureSearch {
     public static void run() throws Exception {
         // Sign first, so there is something to find
-        Signature signature = new Signature("contract.docx");
+        Signature signature = new Signature(ExampleFiles.path("contract.docx"));
         QrCodeSignOptions signOptions = new QrCodeSignOptions("Approved by John Smith");
         signOptions.setEncodeType(QrCodeTypes.QR);
         signOptions.setLeft(100);
         signOptions.setTop(100);
-        signature.sign("signature-search.docx", signOptions);
+        signature.sign(ExampleFiles.output("signature-search.docx"), signOptions);
 
         // Now search the signed document
-        Signature searcher = new Signature("signature-search.docx");
+        Signature searcher = new Signature(ExampleFiles.output("signature-search.docx"));
         QrCodeSearchOptions searchOptions = new QrCodeSearchOptions();
         List<QrCodeSignature> signatures = searcher.search(QrCodeSignature.class, searchOptions);
 

@@ -2,10 +2,11 @@ package com.groupdocs.total.examples.developerguide.parser;
 
 import com.groupdocs.parser.Parser;
 import com.groupdocs.parser.options.IDocumentInfo;
+import com.groupdocs.total.examples.ExampleFiles;
 
 public class ParserDocumentInfo {
     public static void run() throws Exception {
-        try (Parser parser = new Parser("contract.docx")) {
+        try (Parser parser = new Parser(ExampleFiles.path("contract.docx"))) {
             IDocumentInfo info = parser.getDocumentInfo();
 
             System.out.println("File type: " + info.getFileType().getFileFormat());

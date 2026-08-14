@@ -6,11 +6,12 @@ import com.groupdocs.redaction.RedactorChangeLog;
 import com.groupdocs.redaction.options.RasterizationOptions;
 import com.groupdocs.redaction.redactions.ExactPhraseRedaction;
 import com.groupdocs.redaction.redactions.ReplacementOptions;
+import com.groupdocs.total.examples.ExampleFiles;
 import java.io.FileOutputStream;
 
 public class RedactionExactPhrase {
     public static void run() throws Exception {
-        try (Redactor redactor = new Redactor("contract.docx")) {
+        try (Redactor redactor = new Redactor(ExampleFiles.path("contract.docx"))) {
             RedactorChangeLog result = redactor.apply(
                 new ExactPhraseRedaction("Project Northlight", new ReplacementOptions("[REDACTED]")));
 
@@ -21,7 +22,7 @@ public class RedactionExactPhrase {
                 // Rasterization stays off to keep the result an editable DOCX.
                 RasterizationOptions rasterizationOptions = new RasterizationOptions();
                 rasterizationOptions.setEnabled(false);
-                try (FileOutputStream output = new FileOutputStream("redaction-exact-phrase.docx")) {
+                try (FileOutputStream output = new FileOutputStream(ExampleFiles.output("redaction-exact-phrase.docx"))) {
                     redactor.save(output, rasterizationOptions);
                 }
             }

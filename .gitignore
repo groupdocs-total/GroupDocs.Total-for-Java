@@ -2,6 +2,7 @@
 /shelf/
 /.idea/
 /*.iml
+target/
 
 # >>> docs-to-code-examples (gitignore) - managed, do not edit inside >>>
 Examples/**/*.md

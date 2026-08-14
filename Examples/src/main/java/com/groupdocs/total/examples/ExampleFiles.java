@@ -28,17 +28,13 @@ public final class ExampleFiles {
         Class<?> example = callingExample();
         String relative = "src" + File.separator + "main" + File.separator + "java"
                 + File.separator + example.getPackage().getName().replace('.', File.separatorChar);
-        File cursor = new File(System.getProperty("user.dir")).getAbsoluteFile();
-        for (int i = 0; i < 8 && cursor != null; i++) {
-            File candidate = new File(cursor, relative);
-            if (new File(candidate, example.getSimpleName() + ".java").isFile()) {
-                return candidate;
-            }
-            cursor = cursor.getParentFile();
+        File dir = new File(examplesRoot(), relative);
+        if (new File(dir, example.getSimpleName() + ".java").isFile()) {
+            return dir;
         }
         throw new IllegalStateException(
                 "Cannot locate source directory for " + example.getName()
-                        + ". Run Maven from the Examples folder.");
+                        + " (looked in " + dir + ")");
     }
 
     public static File outputDir() {
@@ -52,15 +48,35 @@ public final class ExampleFiles {
         return dir;
     }
 
+    /**
+     * Finds the Examples module whether Maven was started from {@code Examples/}
+     * or from the repository root ({@code mvn -f Examples/pom.xml}).
+     */
     private static File examplesRoot() {
         File cursor = new File(System.getProperty("user.dir")).getAbsoluteFile();
         for (int i = 0; i < 8 && cursor != null; i++) {
-            if (new File(cursor, "pom.xml").isFile() && new File(cursor, "src").isDirectory()) {
-                return cursor;
+            File direct = asExamplesRoot(cursor);
+            if (direct != null) {
+                return direct;
+            }
+            File nested = asExamplesRoot(new File(cursor, "Examples"));
+            if (nested != null) {
+                return nested;
             }
             cursor = cursor.getParentFile();
         }
-        throw new IllegalStateException("Cannot locate the Examples folder. Run Maven from Examples.");
+        throw new IllegalStateException(
+                "Cannot locate the Examples folder from user.dir="
+                        + System.getProperty("user.dir"));
+    }
+
+    private static File asExamplesRoot(File dir) {
+        if (dir != null && dir.isDirectory()
+                && new File(dir, "pom.xml").isFile()
+                && new File(dir, "src").isDirectory()) {
+            return dir;
+        }
+        return null;
     }
 
     private static Class<?> callingExample() {

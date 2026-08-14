@@ -22,36 +22,59 @@ jobs:
       - name: Check for updates and bump versions
         id: versions
         run: |
-          NEEDS=false
-          NOTES=""
-          for entry in $PKG_LIST; do
-            GID=$(echo "$entry" | cut -d: -f1)
-            AID=$(echo "$entry" | cut -d: -f2)
-            GPATH=$(echo "$GID" | tr '.' '/')
+          set -euo pipefail
+          python3 << 'PY'
+          import os, re, urllib.request
 
-            CURRENT=$(mvn -q -f "$POM" help:evaluate -Dexpression=project.version -DforceStdout \
-              org.apache.maven.plugins:maven-help-plugin:3.4.0:evaluate 2>/dev/null || true)
+          pom_path = os.environ["POM"]
+          repo = os.environ["REPO_URL"]
+          packages = os.environ["PKG_LIST"].split()
 
-            META="$REPO_URL/$GPATH/$AID/maven-metadata.xml"
-            LATEST=$(curl -sf "$META" | grep -oP '(?<=<release>)[^<]+' | head -1)
-            if [ -z "$LATEST" ]; then
-              LATEST=$(curl -sf "$META" | grep -oP '(?<=<latest>)[^<]+' | head -1)
-            fi
-            if [ -z "$LATEST" ]; then
-              echo "::error::Could not determine latest version for $AID"
-              exit 1
-            fi
+          with open(pom_path, "r", encoding="utf-8", newline="") as f:
+              pom = f.read()
 
-            INPOM=$(grep -oP '(?<=<version>)[^<]+' "$POM" | head -2 | tail -1)
-            echo "$AID: $INPOM -> $LATEST"
-            if [ "$INPOM" != "$LATEST" ]; then
-              NEEDS=true
-              NOTES="$NOTES $AID $LATEST,"
-              sed -i "0,/<artifactId>$AID<\/artifactId>/{n;s|<version>[^<]*</version>|<version>$LATEST</version>|}" "$POM"
-            fi
-          done
-          echo "needs_update=$NEEDS" >> "$GITHUB_OUTPUT"
-          echo "notes=$(echo "$NOTES" | sed 's/,$//;s/^ //')" >> "$GITHUB_OUTPUT"
+          needs = False
+          notes = []
+
+          for entry in packages:
+              gid, aid = entry.split(":", 1)
+              meta_url = "{}/{}/{}/maven-metadata.xml".format(
+                  repo, gid.replace(".", "/"), aid)
+              try:
+                  with urllib.request.urlopen(meta_url) as resp:
+                      meta = resp.read().decode("utf-8")
+              except Exception as e:
+                  raise SystemExit("Could not fetch metadata for {}: {}".format(aid, e))
+
+              m = re.search(r"<release>([^<]+)</release>", meta) or re.search(
+                  r"<latest>([^<]+)</latest>", meta)
+              if not m:
+                  raise SystemExit("Could not determine latest version for " + aid)
+              latest = m.group(1)
+
+              # Only the <version> that immediately follows this exact artifactId.
+              pat = re.compile(
+                  r"(<artifactId>" + re.escape(aid) + r"</artifactId>\s*<version>)([^<]+)(</version>)"
+              )
+              match = pat.search(pom)
+              if not match:
+                  raise SystemExit("Could not find {} version in {}".format(aid, pom_path))
+              current = match.group(2)
+              print("{}: {} -> {}".format(aid, current, latest))
+              if current != latest:
+                  pom, n = pat.subn(r"\g<1>" + latest + r"\g<3>", pom, count=1)
+                  if n != 1:
+                      raise SystemExit("Failed to replace version for " + aid)
+                  needs = True
+                  notes.append("{} {}".format(aid, latest))
+
+          with open(pom_path, "w", encoding="utf-8", newline="") as f:
+              f.write(pom)
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write("needs_update={}\n".format("true" if needs else "false"))
+              out.write("notes={}\n".format(", ".join(notes)))
+          PY
 
       - name: Commit and push
         if: steps.versions.outputs.needs_update == 'true'

@@ -1,0 +1,2 @@
+Name:	<<[manager.getName()]>>
+Age:	<<[manager.getAge()]>>

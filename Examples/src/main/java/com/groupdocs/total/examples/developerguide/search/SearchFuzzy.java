@@ -15,7 +15,7 @@ public class SearchFuzzy {
             options.getFuzzySearch().setEnabled(true);
             options.getFuzzySearch().setFuzzyAlgorithm(new TableDiscreteFunction(3));
 
-            // Matches "throughput" even when spelled "througput" or "throughtput"
+            // Also matches misspellings
             SearchResult result = index.search("throughput", options);
 
             System.out.println("Documents found: " + result.getDocumentCount());

@@ -8,9 +8,7 @@ import java.io.File;
 
 public class SearchBuildIndex {
     public static void run() throws Exception {
-        // The index is a folder the library owns; keep it out of your documents folder
         try (Index index = new Index(ExampleFiles.output("search-build-index/index"))) {
-            // Index every supported document in the folder
             index.add(ExampleFiles.path("archive"));
 
             SearchResult result = index.search("throughput");
@@ -20,7 +18,6 @@ public class SearchBuildIndex {
 
             for (int i = 0; i < result.getDocumentCount(); i++) {
                 FoundDocument document = result.getFoundDocument(i);
-                // getFilePath() is absolute; the file name is the useful part here
                 String fileName = new File(document.getDocumentInfo().getFilePath()).getName();
                 System.out.println("  " + fileName + " (" + document.getOccurrenceCount() + " occurrences)");
             }

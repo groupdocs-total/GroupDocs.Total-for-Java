@@ -9,8 +9,8 @@ public class MergerSplitPages {
     public static void run() throws Exception {
         Merger merger = new Merger(ExampleFiles.path("contract.docx"));
 
-        // {0} is replaced with the page number, so page 1 becomes page_1.docx
-        int[] pageNumbers = new int[] { 1, 2, 3 };
+        // {0} is the page number. contract.docx has 2 pages.
+        int[] pageNumbers = new int[] { 1, 2 };
         SplitOptions splitOptions = new SplitOptions(
             ExampleFiles.output("merger-split-pages/page_{0}.docx"), pageNumbers, SplitMode.Pages);
 

@@ -18,8 +18,7 @@ public class RedactionExactPhrase {
             System.out.println("Status: " + result.getStatus());
 
             if (result.getStatus() != RedactionStatus.Failed) {
-                // save() with no path overwrites the source, so write to a new file via a stream.
-                // Rasterization stays off to keep the result an editable DOCX.
+                // Save to a new file. Rasterization would flatten the DOCX.
                 RasterizationOptions rasterizationOptions = new RasterizationOptions();
                 rasterizationOptions.setEnabled(false);
                 try (FileOutputStream output = new FileOutputStream(ExampleFiles.output("redaction-exact-phrase.docx"))) {

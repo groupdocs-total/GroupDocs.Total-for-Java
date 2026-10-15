@@ -10,7 +10,7 @@ import java.util.List;
 
 public class SignatureSearch {
     public static void run() throws Exception {
-        // Sign first, so there is something to find
+        // Sign, then search the result
         Signature signature = new Signature(ExampleFiles.path("contract.docx"));
         QrCodeSignOptions signOptions = new QrCodeSignOptions("Approved by John Smith");
         signOptions.setEncodeType(QrCodeTypes.QR);
@@ -18,7 +18,6 @@ public class SignatureSearch {
         signOptions.setTop(100);
         signature.sign(ExampleFiles.output("signature-search.docx"), signOptions);
 
-        // Now search the signed document
         Signature searcher = new Signature(ExampleFiles.output("signature-search.docx"));
         QrCodeSearchOptions searchOptions = new QrCodeSearchOptions();
         List<QrCodeSignature> signatures = searcher.search(QrCodeSignature.class, searchOptions);

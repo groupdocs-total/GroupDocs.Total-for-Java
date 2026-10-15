@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public final class Main {
 
-    /** An example's entry point; run() may throw, so Runnable will not do. */
+    /** Example entry point. run() throws Exception. */
     @FunctionalInterface
     interface Example {
         void run() throws Exception;
@@ -57,6 +57,11 @@ public final class Main {
         EXAMPLES.put("AnnotationAddArea", com.groupdocs.total.examples.developerguide.annotation.AnnotationAddArea::run);
         EXAMPLES.put("AnnotationHighlight", com.groupdocs.total.examples.developerguide.annotation.AnnotationHighlight::run);
         EXAMPLES.put("AnnotationExtract", com.groupdocs.total.examples.developerguide.annotation.AnnotationExtract::run);
+        EXAMPLES.put("AssemblyAssembleJson", com.groupdocs.total.examples.developerguide.assembly.AssemblyAssembleJson::run);
+        EXAMPLES.put("AssemblyAssembleXml", com.groupdocs.total.examples.developerguide.assembly.AssemblyAssembleXml::run);
+        EXAMPLES.put("AssemblyAssembleSpreadsheet", com.groupdocs.total.examples.developerguide.assembly.AssemblyAssembleSpreadsheet::run);
+        EXAMPLES.put("AssemblyAssembleCsv", com.groupdocs.total.examples.developerguide.assembly.AssemblyAssembleCsv::run);
+        EXAMPLES.put("AssemblyAssembleObject", com.groupdocs.total.examples.developerguide.assembly.AssemblyAssembleObject::run);
     }
 
     public static void main(String[] args) throws Exception {
@@ -114,11 +119,9 @@ public final class Main {
             }
         }
         if (licensePath == null || !new File(licensePath).exists()) {
-            return;  // evaluation mode; stay quiet so captured output stays clean
+            return;
         }
-        // Some product License.setLicense() implementations print debug lines to
-        // stdout; silence stdout across the licensing loop so none of it can leak
-        // into an example's captured output.
+        // License calls print debug lines; keep them out of example output.
         java.io.PrintStream original = System.out;
         System.setOut(new java.io.PrintStream(new java.io.ByteArrayOutputStream()));
         try {
@@ -134,6 +137,7 @@ public final class Main {
         try { new com.groupdocs.search.licenses.License().setLicense(licensePath); } catch (Throwable t) { /* product not present or not separately licensed */ }
         try { new com.groupdocs.editor.license.License().setLicense(licensePath); } catch (Throwable t) { /* product not present or not separately licensed */ }
         try { new com.groupdocs.annotation.licenses.License().setLicense(licensePath); } catch (Throwable t) { /* product not present or not separately licensed */ }
+        try { new com.groupdocs.assembly.License().setLicense(licensePath); } catch (Throwable t) { /* product not present or not separately licensed */ }
         } finally {
             System.setOut(original);
         }

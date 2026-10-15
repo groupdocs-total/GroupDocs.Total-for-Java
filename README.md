@@ -2,11 +2,11 @@
 
 Runnable code for [GroupDocs.Total for Java](https://products.groupdocs.com/total/java/) — one Maven
 artifact containing every GroupDocs document API: viewing, conversion, comparison, signing,
-annotation, editing, metadata, search, watermarking, merging, parsing and redaction.
+annotation, editing, assembly, metadata, search, watermarking, merging, parsing and redaction.
 
 ## Examples
 
-[`Examples/`](Examples) holds a small, self-contained class per feature across all 12 bundled
+[`Examples/`](Examples) holds a small, self-contained class per feature across all 13 bundled
 products — each opens a sample file, does one thing, and writes an output. It is the same code
 published on the
 [GroupDocs.Total for Java developer guide](https://docs.groupdocs.com/total/java/developer-guide/),
@@ -55,10 +55,11 @@ Across **PDF, DOCX, PPTX, XLSX** and 90+ other formats it can:
 - **Sign** documents and search or verify signatures
 - **Annotate** documents and read the markup back
 - **Edit** documents through an HTML round trip
+- **Assemble** reports from templates and JSON, XML, CSV or spreadsheet data
 - **Read and edit metadata**, **search** document collections, **watermark**, **merge/split**,
   **parse** text and data, and **redact** sensitive content
 
-> GroupDocs.Assembly, GroupDocs.Markdown and GroupDocs.Classification are separate products and are
+> GroupDocs.Markdown and GroupDocs.Classification are separate products and are
 > not part of the GroupDocs.Total for Java artifact.
 
 ## Individual product examples
@@ -68,6 +69,7 @@ Each bundled product also ships its own, deeper example repository:
 | Product | Examples | API Reference | Documentation |
 |---|---|---|---|
 | [Annotation](https://docs.groupdocs.com/annotation/java/) | [Examples](https://github.com/groupdocs-annotation/GroupDocs.Annotation-for-Java) | [API](https://reference.groupdocs.com/annotation/java/) | [Docs](https://docs.groupdocs.com/annotation/java/) |
+| [Assembly](https://docs.groupdocs.com/assembly/java/) | [Examples](https://github.com/groupdocs-assembly/GroupDocs.Assembly-for-Java) | [API](https://reference.groupdocs.com/assembly/java/) | [Docs](https://docs.groupdocs.com/assembly/java/) |
 | [Comparison](https://docs.groupdocs.com/comparison/java/) | [Examples](https://github.com/groupdocs-comparison/GroupDocs.Comparison-for-Java) | [API](https://reference.groupdocs.com/comparison/java/) | [Docs](https://docs.groupdocs.com/comparison/java/) |
 | [Conversion](https://docs.groupdocs.com/conversion/java/) | [Examples](https://github.com/groupdocs-conversion/GroupDocs.Conversion-for-Java) | [API](https://reference.groupdocs.com/conversion/java/) | [Docs](https://docs.groupdocs.com/conversion/java/) |
 | [Editor](https://docs.groupdocs.com/editor/java/) | [Examples](https://github.com/groupdocs-editor/GroupDocs.Editor-for-Java) | [API](https://reference.groupdocs.com/editor/java/) | [Docs](https://docs.groupdocs.com/editor/java/) |

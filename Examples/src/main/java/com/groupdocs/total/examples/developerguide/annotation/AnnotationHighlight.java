@@ -10,7 +10,7 @@ import java.util.List;
 public class AnnotationHighlight {
     public static void run() throws Exception {
         try (Annotator annotator = new Annotator(ExampleFiles.path("contract.docx"))) {
-            // Corner points of the region to highlight
+            // Highlighted area
             List<Point> points = Arrays.asList(
                 new Point(80, 730),
                 new Point(240, 730),

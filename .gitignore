@@ -3,6 +3,9 @@
 /.idea/
 /*.iml
 target/
+Examples/src/out/
+Examples/src/.idea/
+Examples/src/*.iml
 
 # >>> docs-to-code-examples (gitignore) - managed, do not edit inside >>>
 Examples/**/*.md
@@ -85,3 +88,6 @@ Examples/**/watermark-add-text/
 Examples/**/watermark-spreadsheet.*
 Examples/**/watermark-spreadsheet/
 # <<< docs-to-code-examples (gitignore) <<<
+
+# Assembly templates next to the examples are inputs. The rule above ignores every Examples/**/*.txt.
+!Examples/**/developerguide/assembly/*.txt

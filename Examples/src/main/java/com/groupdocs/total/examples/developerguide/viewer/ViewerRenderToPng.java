@@ -9,7 +9,7 @@ public class ViewerRenderToPng {
         try (Viewer viewer = new Viewer(ExampleFiles.path("contract.docx"))) {
             PngViewOptions viewOptions = new PngViewOptions(ExampleFiles.output("viewer-render-to-png/page_{0}.png"));
 
-            // Render only the first two pages
+            // Pages 1 and 2
             viewer.view(viewOptions, 1, 2);
         }
     }

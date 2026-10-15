@@ -14,7 +14,7 @@ public class ComparisonAcceptReject {
 
             ChangeInfo[] changes = comparer.getChanges();
 
-            // Accept everything except the first change, which we reject
+            // Accept all changes except the first
             for (ChangeInfo change : changes) {
                 change.setComparisonAction(ComparisonAction.ACCEPT);
             }

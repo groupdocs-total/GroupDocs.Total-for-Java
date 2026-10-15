@@ -13,7 +13,7 @@ public class EditorHtmlToDocument {
 
         EditableDocument original = editor.edit(new WordProcessingEditOptions());
 
-        // Stand in for the user's edit in a web editor
+        // Sample edit
         String editedHtml = original.getBodyContent()
             .replace("Consulting Services Agreement", "Consulting Services Agreement (revised)");
 

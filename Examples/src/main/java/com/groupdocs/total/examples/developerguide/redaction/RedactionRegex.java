@@ -12,7 +12,7 @@ import java.io.FileOutputStream;
 public class RedactionRegex {
     public static void run() throws Exception {
         try (Redactor redactor = new Redactor(ExampleFiles.path("contract.docx"))) {
-            // Any currency amount such as "120,000 USD"
+            // Amounts like "120,000 USD"
             RedactorChangeLog result = redactor.apply(
                 new RegexRedaction("\\d{1,3}(,\\d{3})*\\s?USD", new ReplacementOptions("[AMOUNT]")));
 

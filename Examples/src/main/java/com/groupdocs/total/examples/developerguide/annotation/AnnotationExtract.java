@@ -9,7 +9,7 @@ import java.util.List;
 
 public class AnnotationExtract {
     public static void run() throws Exception {
-        // Annotate first, so there is something to read back
+        // Add an annotation, then read it back
         try (Annotator annotator = new Annotator(ExampleFiles.path("contract.docx"))) {
             AreaAnnotation area = new AreaAnnotation();
             area.setBox(new Rectangle(100, 100, 200, 100));

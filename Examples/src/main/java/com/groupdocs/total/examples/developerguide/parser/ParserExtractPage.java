@@ -7,7 +7,7 @@ import com.groupdocs.total.examples.ExampleFiles;
 public class ParserExtractPage {
     public static void run() throws Exception {
         try (Parser parser = new Parser(ExampleFiles.path("contract.docx"))) {
-            // Read the first page only; the page index is zero-based
+            // First page, index 0
             try (TextReader reader = parser.getText(0)) {
                 if (reader == null) {
                     System.out.println("Text extraction is not supported for this format.");

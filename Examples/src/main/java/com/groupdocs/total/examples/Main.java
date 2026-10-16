@@ -19,6 +19,8 @@ public final class Main {
     private static final Map<String, Example> EXAMPLES = new LinkedHashMap<>();
 
     static {
+        EXAMPLES.put("SetLicenseFromFile", com.groupdocs.total.examples.quickstart.SetLicenseFromFile::run);
+        EXAMPLES.put("SetLicenseFromStream", com.groupdocs.total.examples.quickstart.SetLicenseFromStream::run);
         EXAMPLES.put("ConversionPdfToWord", com.groupdocs.total.examples.developerguide.conversion.ConversionPdfToWord::run);
         EXAMPLES.put("ConversionWordToPdf", com.groupdocs.total.examples.developerguide.conversion.ConversionWordToPdf::run);
         EXAMPLES.put("ConversionDocumentInfo", com.groupdocs.total.examples.developerguide.conversion.ConversionDocumentInfo::run);

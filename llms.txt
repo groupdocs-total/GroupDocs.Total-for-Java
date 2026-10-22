@@ -1,0 +1,17 @@
+# GroupDocs.Total for Java examples
+
+Runnable examples: https://github.com/groupdocs-total/GroupDocs.Total-for-Java
+
+Package: com.groupdocs:groupdocs-total
+Pinned in Examples/pom.xml: 26.10
+Maven repository: https://releases.groupdocs.com/java/repo/
+Docs: https://docs.groupdocs.com/total/java/
+
+From Examples/:
+
+- mvn -q compile exec:java
+- mvn -q compile exec:java -Dexec.args="--list"
+
+JDK 8 or later. Maven 3.
+Examples/ is generated from the documentation. Edit the docs, not the generated classes.
+Do not use a LATEST version pin.

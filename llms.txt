@@ -3,7 +3,7 @@
 Runnable examples: https://github.com/groupdocs-total/GroupDocs.Total-for-Java
 
 Package: com.groupdocs:groupdocs-total
-Pinned in Examples/pom.xml: 26.10
+Pinned in Examples/pom.xml: 26.11
 Maven repository: https://releases.groupdocs.com/java/repo/
 Docs: https://docs.groupdocs.com/total/java/
 

@@ -9,7 +9,7 @@ Runnable Java examples for GroupDocs.Total for Java.
 - Docs: https://docs.groupdocs.com/total/java/
 - Package: `com.groupdocs:groupdocs-total`
 - Repository: https://releases.groupdocs.com/java/repo/
-- `Examples/pom.xml` pins `groupdocs-total` at 26.10
+- `Examples/pom.xml` pins `groupdocs-total` at 26.11
 
 `Examples/` is generated from the documentation. Edit the docs, not the generated classes. A change here is overwritten on the next docs-to-code run.
 

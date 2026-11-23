@@ -20,13 +20,17 @@
             <id>GroupDocsJavaAPI</id>
             <url>https://releases.groupdocs.com/java/repo/</url>
         </repository>
+        <repository>
+            <id>AsposeJavaAPI</id>
+            <url>https://releases.aspose.com/java/repo/</url>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>com.groupdocs</groupId>
             <artifactId>groupdocs-total</artifactId>
-            <version>26.8</version>
+            <version>26.11</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

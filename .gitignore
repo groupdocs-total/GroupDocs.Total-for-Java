@@ -3,6 +3,8 @@
 /.idea/
 /*.iml
 target/
+Examples/.idea/
+Examples/**/*.iml
 Examples/src/out/
 Examples/src/.idea/
 Examples/src/*.iml
